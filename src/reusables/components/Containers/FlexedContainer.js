@@ -2,15 +2,9 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const FlexedContainer = ({
-  children,
-  contStyle,
-  padding,
-  config,
+  children, contStyle, padding, config,
 }) => (
-  <View
-    style={[styles.container, contStyle, padding]}
-    {...config}
-  >
+  <View style={[styles.container, contStyle, padding]} {...config}>
     {children}
   </View>
 );
@@ -23,6 +17,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: 'blue',
     backgroundColor: '#fff',
+    overflow: 'hidden',
   },
 });
 

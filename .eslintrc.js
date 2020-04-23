@@ -32,6 +32,7 @@ module.exports = {
 		"global-require": "off",
 		"react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
 		"react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+		"react-native/no-raw-text": "off",
 	},
 
 	settings: {

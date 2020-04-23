@@ -1,18 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import FlexedContainer from './src/reusables/components/Containers/FlexedContainer';
+import { WHITE } from './src/reusables/styles/colors';
+import { borderStyles, paddingStyles } from './src/reusables/styles/style';
+import AuthScreen from './src/screens/Auth/AuthScreen';
 
 const App = () => (
-  <View style={styles.container}>
-    <Text>Open up App.js to start working on your app!</Text>
-  </View>
+  <SafeAreaView style={styles.container}>
+    <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
+      <AuthScreen />
+
+    </FlexedContainer>
+  </SafeAreaView>
 );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: WHITE,
+    marginTop: StatusBar.currentHeight,
+    borderWidth: 0,
+    borderColor: 'red',
   },
 });
 

@@ -24,7 +24,9 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^2.5.1",
-    "eslint-plugin-react-native": "^3.8.1"
+    "eslint-plugin-react-native": "^3.8.1",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5"
   },
   "private": true
 }

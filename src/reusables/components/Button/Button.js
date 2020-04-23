@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 4,
+    padding: 6,
     paddingLeft: 16,
     paddingRight: 16,
     backgroundColor: BLUE_BUTTON,
     borderRadius: 4,
-    margin: 8,
+
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: {

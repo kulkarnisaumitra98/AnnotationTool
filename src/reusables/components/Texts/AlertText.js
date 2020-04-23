@@ -1,9 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { BagError, BagSuccess, BagWarning, textError, textSuccess, textWarning } from '../../styles/colors';
 import MyText from './MyText';
-import {
-  BagError, BagWarning, textError, textWarning, textSuccess, BagSuccess,
-} from '../../styles/colors';
 
 const TextAlert = ({
   textStyle,
@@ -45,7 +43,7 @@ const TextAlert = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    alignSelf: 'baseline',
     marginTop: 4,
     marginBottom: 4,
     padding: 8,

@@ -1,4 +1,4 @@
-import { StyleSheet, StatusBar, Dimensions } from 'react-native';
+import { Dimensions, Platform, StatusBar, StyleSheet } from 'react-native';
 
 export const marginStyles = StyleSheet.create({
 
@@ -194,3 +194,16 @@ export const positionStyles = StyleSheet.create({
 });
 
 export const getSquare = (size) => ({ width: size, height: size });
+
+export const getReponsesivePaddingUnit = (value) => (Platform.OS === 'web' ? value * 3 : value);
+
+
+// const screenWidth = Dimensions.get('window').width;
+
+// console.log(screenWidth, PixelRatio.getPixelSizeForLayoutSize(4));
+
+// if (screenWidth > 1024 && screenWidth <= 1400) { return value * 3; }
+// if (screenWidth > 900 && screenWidth <= 1024) return value * 3;
+// if (screenWidth > 768 && screenWidth <= 900) return value * 3;
+// if (screenWidth > 360 && screenWidth <= 768) return value * 2.5;
+// if (screenWidth > 250 && screenWidth <= 360) return value;
