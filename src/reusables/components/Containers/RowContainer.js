@@ -27,9 +27,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
     padding: 8,
-    height: 20,
+    borderWidth: 0,
     marginBottom: 10,
   },
 });

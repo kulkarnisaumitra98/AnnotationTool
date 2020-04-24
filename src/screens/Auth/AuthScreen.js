@@ -1,14 +1,30 @@
 import React from 'react';
+import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
 import KeyBoardView from '../../reusables/components/Containers/KeyboardView';
-import { positionStyles } from '../../reusables/styles/style';
+import RowContainer from '../../reusables/components/Containers/RowContainer';
+import { dimensionStyles, positionStyles } from '../../reusables/styles/style';
 import Login from './Login/Login';
 import Signup from './Signup/Signup';
 
-const AuthScreen = () => (
-  <KeyBoardView contStyle={positionStyles.jcc}>
-    <Login />
-    <Signup />
-  </KeyBoardView>
-);
+const AuthScreen = () => {
+  const content = (
+    <>
+      <Login />
+      <Signup />
+    </>
+  );
+  return dimensionStyles.dw.width <= 400 ? (
+    <KeyBoardView contStyle={positionStyles.jcc}>
+      {content}
+    </KeyBoardView>
+  )
+    : (
+      <FlexedContainer contStyle={positionStyles.jcc}>
+        <RowContainer>
+          {content}
+        </RowContainer>
+      </FlexedContainer>
+    );
+};
 
 export default AuthScreen;

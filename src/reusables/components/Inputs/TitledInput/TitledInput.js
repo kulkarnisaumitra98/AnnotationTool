@@ -2,6 +2,7 @@ import React, { useContext, useRef } from 'react';
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import KeyboardViewContext from '../../../../contexts/KeyboardViewContext';
 import { SUCCESS_TEXT } from '../../../styles/colors';
+import { dimensionStyles } from '../../../styles/style';
 import MyText from '../../Texts/MyText';
 
 
@@ -18,7 +19,11 @@ const TitledInput = ({
   mode,
 }) => {
   const ipRef = useRef(null);
-  const { toggleMode } = useContext(KeyboardViewContext);
+  const responsive = dimensionStyles.dw.width <= 400;
+
+  let context;
+
+  if (responsive) { context = useContext(KeyboardViewContext); }
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -31,7 +36,7 @@ const TitledInput = ({
 				  config.value ? { borderColor: err ? RED : SUCCESS_TEXT } : null,
         ]}
         {...config}
-        onFocus={() => toggleMode(mode, ipRef)}
+        onFocus={() => { if (context) context.toggleMode(mode, ipRef); }}
       />
       {err && config.value ? (
         <MyText style={[styles.alert, { color: RED }]} text={err}>

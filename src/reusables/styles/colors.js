@@ -28,3 +28,6 @@ export const BagSuccess = '#d4edda';
 export const textSuccess = '#155724';
 
 export const SUCCESS_TEXT = '#4bb543';
+
+export const BUTTON_GREEN = '#A9DD7D';
+export const BUTTON_ORANGE = '#FEA15D';
