@@ -9,7 +9,6 @@ const App = () => (
   <SafeAreaView style={styles.container}>
     <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
       <AuthScreen />
-
     </FlexedContainer>
   </SafeAreaView>
 );

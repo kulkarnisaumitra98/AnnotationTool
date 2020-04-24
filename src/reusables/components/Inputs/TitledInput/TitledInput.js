@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext, useRef } from 'react';
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
+import KeyboardViewContext from '../../../../contexts/KeyboardViewContext';
 import { SUCCESS_TEXT } from '../../../styles/colors';
 import MyText from '../../Texts/MyText';
 
@@ -13,28 +14,33 @@ const TitledInput = ({
   config,
   title,
   err,
-}) => (
-  <View style={[styles.container, containerStyle]}>
-    {title ? <Text style={[styles.title, titleStyle]}>{title}</Text> : null}
-    <TextInput
-      style={[
-        styles.inputContainer,
-        textInputStyle,
-        config.value ? { borderColor: err ? RED : SUCCESS_TEXT } : null,
-      ]}
-      {...config}
-    />
-    {err && config.value
-      ? (
-        <MyText
-          style={[styles.alert, { color: RED }]}
-          text={err}
-        >
+
+  mode,
+}) => {
+  const ipRef = useRef(null);
+  const { toggleMode } = useContext(KeyboardViewContext);
+
+  return (
+    <View style={[styles.container, containerStyle]}>
+      {title ? <Text style={[styles.title, titleStyle]}>{title}</Text> : null}
+      <TextInput
+        ref={ipRef}
+        style={[
+				  styles.inputContainer,
+				  textInputStyle,
+				  config.value ? { borderColor: err ? RED : SUCCESS_TEXT } : null,
+        ]}
+        {...config}
+        onFocus={() => toggleMode(mode, ipRef)}
+      />
+      {err && config.value ? (
+        <MyText style={[styles.alert, { color: RED }]} text={err}>
           {err}
         </MyText>
       ) : null}
-  </View>
-);
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

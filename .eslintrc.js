@@ -18,6 +18,9 @@ module.exports = {
 	},
 	plugins: ["react", "react-native", "react-hooks"],
 	rules: {
+		"no-tabs": ["warn", { allowIndentationTabs: true }],
+		"no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
+		"object-curly-spacing": ["warn"],
 		"react/jsx-filename-extension": [1, { extensions: [".js", ".jsx"] }],
 		"no-use-before-define": [
 			"error",
@@ -33,6 +36,8 @@ module.exports = {
 		"react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
 		"react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
 		"react-native/no-raw-text": "off",
+		"react-native/no-inline-styles": "warn",
+		"react-native/no-color-literals": "warn",
 	},
 
 	settings: {

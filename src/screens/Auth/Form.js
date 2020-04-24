@@ -2,21 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import TitledInput from '../../reusables/components/Inputs/TitledInput/TitledInput';
 
-// Reusable Form
-// The form config shoud be in following format =>
-/*
- {
-   field1: {
-     value: '',
-     err: '', // error message if validation fails
-     config: {
-       placeholder: '',
-       ...allTheConfigsRelatedToTextInput
-     }
-   },
-   field2: ...
- }
-*/
 
 const Form = ({
   formConfig,
