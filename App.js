@@ -4,13 +4,18 @@ import FlexedContainer from './src/reusables/components/Containers/FlexedContain
 import { WHITE } from './src/reusables/styles/colors';
 import { borderStyles, paddingStyles } from './src/reusables/styles/style';
 import AuthScreen from './src/screens/Auth/AuthScreen';
+import ChunkScreen from './src/screens/Chunk/ChunkScreen';
 
 export const AUTHSCREEN = 'AuthScreen';
+export const CHUNKSCREEN = 'CHUNKSCREEN';
 
 const switchScreen = (choice) => {
   switch (choice) {
     case AUTHSCREEN:
       return <AuthScreen />;
+
+    case CHUNKSCREEN:
+      return <ChunkScreen />;
 
     default:
       return <AuthScreen />;
@@ -20,7 +25,7 @@ const switchScreen = (choice) => {
 const App = () => (
   <SafeAreaView style={styles.container}>
     <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
-      {switchScreen(AUTHSCREEN)}
+      {switchScreen(CHUNKSCREEN)}
     </FlexedContainer>
   </SafeAreaView>
 );
