@@ -26,7 +26,7 @@
         margin: 0px;
         padding: 0px;
         /* Allows content to fill the viewport and go beyond the bottom */
-        min-height: 100%;
+        max-height: 100%;
       }
       #root {
         flex-shrink: 0;
@@ -46,7 +46,7 @@
       body {
         display: flex;
         /* Allows you to scroll below the viewport; default value is visible */
-        overflow-y: auto;
+        overflow-y: none;
         overscroll-behavior-y: none;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;

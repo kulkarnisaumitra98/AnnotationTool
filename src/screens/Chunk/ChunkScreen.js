@@ -29,7 +29,6 @@ const ChunkScreen = () => {
         <>
           <Title title="Chunks" />
           <FlatList
-            style={{ height: 300 }}
             data={data.slice(0, page * 12)}
             renderItem={({ item }) => <Row item={item} />}
             keyExtractor={(item) => item.ID.toString()}
