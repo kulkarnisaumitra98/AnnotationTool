@@ -6,8 +6,9 @@ import { TEXT_BLACK } from '../../reusables/styles/colors';
 const Table = ({
   data,
 }) => {
+  console.log(data, 'Hellllooooooooo');
   const {
-    wordA, wordB, offsetA, offsetB,
+    A, B,
   } = data;
 
   return (
@@ -16,24 +17,24 @@ const Table = ({
         <Text style={styles.textStyle}>
           Correct Noun =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{wordA}</Text>
+          <Text style={{ fontWeight: 'bold' }}>{A.value}</Text>
         </Text>
         <Text style={styles.textStyle}>
           Offset =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{offsetA}</Text>
+          <Text style={{ fontWeight: 'bold' }}>{A.offset}</Text>
         </Text>
       </View>
       <View style={styles.wordCont}>
         <Text style={styles.textStyle}>
           Misleading Noun =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{wordB}</Text>
+          <Text style={{ fontWeight: 'bold' }}>{B.value}</Text>
         </Text>
         <Text style={styles.textStyle}>
           Offset =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{offsetB}</Text>
+          <Text style={{ fontWeight: 'bold' }}>{B.offset}</Text>
         </Text>
       </View>
     </RowContainer>
