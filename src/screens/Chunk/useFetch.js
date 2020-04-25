@@ -10,11 +10,10 @@ export const useFetch = (url, params) => {
 
     const fetch = async () => {
       try {
-        const response = await axios.get(
-          url,
+        const response = await axios.get(url, {
           params,
-        );
-        setstate({ data: response.data, loading: false });
+        });
+        setstate({ data: JSON.parse(response.data.corpora), loading: false });
       } catch (err) {
         console.log(err);
       }
