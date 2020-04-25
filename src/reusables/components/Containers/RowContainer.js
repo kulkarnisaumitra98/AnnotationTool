@@ -26,10 +26,10 @@ const RowContainer = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     padding: 8,
     borderWidth: 0,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
 });
 
