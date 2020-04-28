@@ -4,10 +4,11 @@ import { ActivityIndicator } from 'react-native';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
 import { marginStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
+import usePrevious from '../Common/usePrevious';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
-import { getCorpus } from './getCorpus';
 import { useFetch } from './useFetch';
+import { getSelectedCorpus, highlightWord } from './Utils/corpusProcessing';
 
 const TASKS = 2;
 
@@ -35,15 +36,21 @@ const ChunkScreen = () => {
   const { data, loading } = useFetch('http://127.0.0.1:8000/get_corpora/', {
     page: 1,
   });
+
   // const [page, setPage] = useState(1);
+
   const [currentChunk, setCurrentChunk] = useState({
     index: null,
     chunk: null,
   });
 
   const initialState = {
-    A: { value: 'None', offset: 'None', color: 'red' },
-    B: { value: 'None', offset: 'None', color: 'blue' },
+    A: {
+      value: 'None', offset: 'None', index: null, color: 'red',
+    },
+    B: {
+      value: 'None', offset: 'None', index: null, color: 'blue',
+    },
   };
 
   const [wordData, setData] = useState(initialState);
@@ -57,14 +64,35 @@ const ChunkScreen = () => {
     if (currentChunk.index !== null) {
       setCurrentChunk({
         index: currentChunk.index,
-        chunk: getCorpus({ fontSize: 24 }, data[currentChunk.index].fields, handleWordPress),
+        chunk: getSelectedCorpus(
+          { fontSize: 24 },
+          data[currentChunk.index].fields,
+          handleWordPress,
+        ),
       });
     }
-  }, [currentChunk.index, operation]);
+  }, [currentChunk.index]);
 
-  const handleWordPress = (value, offset) => () => setData((prevData) => ({
+  const prevOperation = usePrevious(operation);
+
+  useEffect(() => {
+    if (currentChunk.index !== null) {
+      setCurrentChunk({
+        index: currentChunk.index,
+        chunk: highlightWord(
+          currentChunk.chunk,
+          ...Object.values(wordData[operationToWord(prevOperation)]),
+          operation,
+        ),
+      });
+    }
+  }, [operation]);
+
+  const handleWordPress = (value, offset, index) => () => setData((prevData) => ({
     ...prevData,
-    [operationToWord(operation)]: { value, offset },
+    [operationToWord(operation)]: {
+      ...prevData[operationToWord(operation)], value, offset, index,
+    },
   }));
 
   return (

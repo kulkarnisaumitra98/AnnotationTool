@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { marginStyles } from '../../reusables/styles/style';
-import { getCorpusList } from './getCorpus';
+import { getListItemCorpus } from './Utils/corpusProcessing';
 
 const styles = StyleSheet.create({
   row: {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 
 const ChunksList = ({ data, setIndex }) => {
   const Row = ({ fields, index }) => {
-    const chunk = getCorpusList({ fontSize: 20 }, fields);
+    const chunk = getListItemCorpus({ fontSize: 20 }, fields);
     return (
       <TouchableOpacity
         onPress={() => setIndex((prevData) => ({ ...prevData, index }))}
