@@ -6,50 +6,53 @@ import RowContainer from '../../reusables/components/Containers/RowContainer';
 import Cross from '../../reusables/components/General/Cross';
 import { borderStyles, paddingStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
+import { getCorpus } from './getCorpus';
 import PickerContainer from './PickerContainer';
 import Table from './Table';
 
 const ChunkSelectionModal = ({
-  visible, chunk, closeModal, data,
-}) => (
-  <Modal
-    visible={visible}
-    onRequestClose={closeModal}
-    animationType="slide"
-    transparent
-  >
-    <View style={styles.outerCont}>
-      <View style={styles.container}>
-        <Cross closeAction={closeModal} />
-        <RowContainer
-          justifyContent="space-between"
-          contStyle={[paddingStyles.p_4]}
-        >
-          <Title title="Current Operation" textStyle={paddingStyles.p_0} />
-          <View style={{ flexDirection: 'row' }}>
-            <PickerContainer />
-            <Button
-              title="Add Entry"
-              handlePress={() => {}}
-              containerStyle={styles.button}
-              textStyle={{ fontWeight: 'bold' }}
-            />
-          </View>
-        </RowContainer>
-        <ScrollView>
+  visible, fields, closeModal, data, handleOperation,
+}) => {
+  const chunk = getCorpus({ fontSize: 24 }, fields, handleOperation);
+  return (
+    <Modal
+      visible={visible}
+      onRequestClose={closeModal}
+      animationType="slide"
+      transparent
+    >
+      <View style={styles.outerCont}>
+        <View style={styles.container}>
+          <Cross closeAction={closeModal} />
           <RowContainer
-            justifyContent="flex-start"
-            contStyle={[borderStyles.bw_0, styles.rowCont]}
+            justifyContent="space-between"
+            contStyle={[paddingStyles.p_4]}
           >
-            {chunk}
+            <Title title="Current Operation" textStyle={paddingStyles.p_0} />
+            <View style={{ flexDirection: 'row' }}>
+              <PickerContainer />
+              <Button
+                title="Add Entry"
+                handlePress={() => {}}
+                containerStyle={styles.button}
+                textStyle={{ fontWeight: 'bold' }}
+              />
+            </View>
           </RowContainer>
-        </ScrollView>
-        <Table data={data} />
+          <ScrollView>
+            <RowContainer
+              justifyContent="flex-start"
+              contStyle={[borderStyles.bw_0, styles.rowCont]}
+            >
+              {chunk}
+            </RowContainer>
+          </ScrollView>
+          <Table data={data} />
+        </View>
       </View>
-    </View>
-  </Modal>
-);
-
+    </Modal>
+  );
+};
 const styles = StyleSheet.create({
   outerCont: {
     width: '100%',

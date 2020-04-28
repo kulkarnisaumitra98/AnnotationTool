@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { marginStyles } from '../../reusables/styles/style';
-import getCorpus from './getCorpus';
+import { getCorpusList } from './getCorpus';
 
 const styles = StyleSheet.create({
   row: {
@@ -14,12 +14,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const ChunksList = ({ data, setModalToggle, handleOperation }) => {
-  const Row = ({ fields }) => {
-    const chunk = getCorpus({ fontSize: 20 }, fields, handleOperation);
+const ChunksList = ({ data, setIndex }) => {
+  const Row = ({ fields, index }) => {
+    const chunk = getCorpusList({ fontSize: 20 }, fields);
     return (
       <TouchableOpacity
-        onPress={() => setModalToggle({ visible: true, chunk })}
+        onPress={() => setIndex(index)}
         style={styles.row}
       >
         <Text numberOfLines={1} style={[marginStyles.ml_12, {}]}>
@@ -34,7 +34,7 @@ const ChunksList = ({ data, setModalToggle, handleOperation }) => {
       style={marginStyles.mb_16}
 			// data={data.slice(0, page * 12)}
       data={data}
-      renderItem={({ item }) => <Row fields={item.fields} />}
+      renderItem={({ item, index }) => <Row fields={item.fields} index={index} />}
       keyExtractor={(item) => item.pk.toString()}
     />
   );

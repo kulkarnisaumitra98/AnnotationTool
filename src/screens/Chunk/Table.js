@@ -6,7 +6,6 @@ import { TEXT_BLACK } from '../../reusables/styles/colors';
 const Table = ({
   data,
 }) => {
-  console.log(data, 'Hellllooooooooo');
   const {
     A, B,
   } = data;
