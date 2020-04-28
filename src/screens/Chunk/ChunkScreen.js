@@ -6,6 +6,7 @@ import { marginStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
+import { getCorpus } from './getCorpus';
 import { useFetch } from './useFetch';
 
 const TASKS = 2;
@@ -26,23 +27,23 @@ const getNextOperation = (data) => {
   const taskArr = Object.keys(data);
   for (let i = 0; i < taskArr.length; i += 1) {
     if (data[taskArr[i]].value !== 'None') index += 1;
-
-    break;
+    else { return index === TASKS ? index - 1 : index; }
   }
-
-  return index === TASKS ? index - 1 : index;
 };
 
 const ChunkScreen = () => {
   const { data, loading } = useFetch('http://127.0.0.1:8000/get_corpora/', {
     page: 1,
   });
-  const [page, setPage] = useState(1);
-  const [index, setIndex] = useState(null);
-  const [moreLoading, setMoreLoading] = useState(false);
+  // const [page, setPage] = useState(1);
+  const [currentChunk, setCurrentChunk] = useState({
+    index: null,
+    chunk: null,
+  });
+
   const initialState = {
-    A: { value: 'None', offset: 'None' },
-    B: { value: 'None', offset: 'None' },
+    A: { value: 'None', offset: 'None', color: 'red' },
+    B: { value: 'None', offset: 'None', color: 'blue' },
   };
 
   const [wordData, setData] = useState(initialState);
@@ -52,26 +53,33 @@ const ChunkScreen = () => {
     setOperation(getNextOperation(wordData));
   }, [wordData]);
 
+  useEffect(() => {
+    if (currentChunk.index !== null) {
+      setCurrentChunk({
+        index: currentChunk.index,
+        chunk: getCorpus({ fontSize: 24 }, data[currentChunk.index].fields, handleWordPress),
+      });
+    }
+  }, [currentChunk.index, operation]);
+
+  const handleWordPress = (value, offset) => () => setData((prevData) => ({
+    ...prevData,
+    [operationToWord(operation)]: { value, offset },
+  }));
+
   return (
     <FlexedContainer>
       {!loading ? (
         <>
           <Title title="Chunks" />
-          <ChunksList data={data} setIndex={setIndex} />
-          {index !== null ? (
+          <ChunksList data={data} setIndex={setCurrentChunk} />
+          {currentChunk.index !== null ? (
             <ChunkSelectionModal
-              visible={Boolean(index + 1)}
-              fields={data[index].fields}
+              visible={Boolean(currentChunk.index + 1)}
               data={wordData}
-              closeModal={() => setIndex(null)}
-              handleOperation={(value, offset) => () => setData((prevData) => ({
-							      ...prevData,
-							      [operationToWord(operation)]: { value, offset },
-							    }))}
+              chunk={currentChunk.chunk}
+              closeModal={() => setCurrentChunk({ index: null, chunk: null })}
             />
-          ) : null}
-          {moreLoading ? (
-            <ActivityIndicator size="large" style={marginStyles.mb_32s} />
           ) : null}
         </>
       ) : (

@@ -6,53 +6,49 @@ import RowContainer from '../../reusables/components/Containers/RowContainer';
 import Cross from '../../reusables/components/General/Cross';
 import { borderStyles, paddingStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
-import { getCorpus } from './getCorpus';
 import PickerContainer from './PickerContainer';
 import Table from './Table';
 
 const ChunkSelectionModal = ({
-  visible, fields, closeModal, data, handleOperation,
-}) => {
-  const chunk = getCorpus({ fontSize: 24 }, fields, handleOperation);
-  return (
-    <Modal
-      visible={visible}
-      onRequestClose={closeModal}
-      animationType="slide"
-      transparent
-    >
-      <View style={styles.outerCont}>
-        <View style={styles.container}>
-          <Cross closeAction={closeModal} />
+  visible, closeModal, data, chunk,
+}) => (
+  <Modal
+    visible={visible}
+    onRequestClose={closeModal}
+    animationType="slide"
+    transparent
+  >
+    <View style={styles.outerCont}>
+      <View style={styles.container}>
+        <Cross closeAction={closeModal} />
+        <RowContainer
+          justifyContent="space-between"
+          contStyle={[paddingStyles.p_4]}
+        >
+          <Title title="Current Operation" textStyle={paddingStyles.p_0} />
+          <View style={{ flexDirection: 'row' }}>
+            <PickerContainer />
+            <Button
+              title="Add Entry"
+              handlePress={() => {}}
+              containerStyle={styles.button}
+              textStyle={{ fontWeight: 'bold' }}
+            />
+          </View>
+        </RowContainer>
+        <ScrollView>
           <RowContainer
-            justifyContent="space-between"
-            contStyle={[paddingStyles.p_4]}
+            justifyContent="flex-start"
+            contStyle={[borderStyles.bw_0, styles.rowCont]}
           >
-            <Title title="Current Operation" textStyle={paddingStyles.p_0} />
-            <View style={{ flexDirection: 'row' }}>
-              <PickerContainer />
-              <Button
-                title="Add Entry"
-                handlePress={() => {}}
-                containerStyle={styles.button}
-                textStyle={{ fontWeight: 'bold' }}
-              />
-            </View>
+            {chunk}
           </RowContainer>
-          <ScrollView>
-            <RowContainer
-              justifyContent="flex-start"
-              contStyle={[borderStyles.bw_0, styles.rowCont]}
-            >
-              {chunk}
-            </RowContainer>
-          </ScrollView>
-          <Table data={data} />
-        </View>
+        </ScrollView>
+        <Table data={data} />
       </View>
-    </Modal>
-  );
-};
+    </View>
+  </Modal>
+);
 const styles = StyleSheet.create({
   outerCont: {
     width: '100%',

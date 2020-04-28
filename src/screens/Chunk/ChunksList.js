@@ -19,7 +19,7 @@ const ChunksList = ({ data, setIndex }) => {
     const chunk = getCorpusList({ fontSize: 20 }, fields);
     return (
       <TouchableOpacity
-        onPress={() => setIndex(index)}
+        onPress={() => setIndex((prevData) => ({ ...prevData, index }))}
         style={styles.row}
       >
         <Text numberOfLines={1} style={[marginStyles.ml_12, {}]}>
