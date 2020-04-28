@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 
 const ChunksList = ({ data, setIndex }) => {
   const Row = ({ fields, index }) => {
-    const chunk = getListItemCorpus({ fontSize: 20 }, fields);
+    const chunk = getListItemCorpus({ fontSize: 20, marginRight: 6 }, fields);
     return (
       <TouchableOpacity
         onPress={() => setIndex((prevData) => ({ ...prevData, index }))}

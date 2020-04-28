@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
+import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
-import usePrevious from '../Common/usePrevious';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
 import { useFetch } from './useFetch';
-import { getSelectedCorpus, highlightWord } from './Utils/corpusProcessing';
+import { getSelectedCorpus } from './Utils/corpusProcessing';
 
 const TASKS = 2;
 
@@ -46,10 +46,10 @@ const ChunkScreen = () => {
 
   const initialState = {
     A: {
-      value: 'None', offset: 'None', index: null, color: 'red',
+      value: 'None', offset: 'None', index: null, color: BagSuccess,
     },
     B: {
-      value: 'None', offset: 'None', index: null, color: 'blue',
+      value: 'None', offset: 'None', index: null, color: BagError,
     },
   };
 
@@ -65,7 +65,7 @@ const ChunkScreen = () => {
       setCurrentChunk({
         index: currentChunk.index,
         chunk: getSelectedCorpus(
-          { fontSize: 24 },
+          { fontSize: 24, marginRight: 6 },
           data[currentChunk.index].fields,
           handleWordPress,
         ),
@@ -73,16 +73,17 @@ const ChunkScreen = () => {
     }
   }, [currentChunk.index]);
 
-  const prevOperation = usePrevious(operation);
+  // const prevOperation = usePrevious(operation);
 
   useEffect(() => {
     if (currentChunk.index !== null) {
       setCurrentChunk({
         index: currentChunk.index,
-        chunk: highlightWord(
-          currentChunk.chunk,
-          ...Object.values(wordData[operationToWord(prevOperation)]),
-          operation,
+        chunk: getSelectedCorpus(
+          { fontSize: 24, marginRight: 6 },
+          data[currentChunk.index].fields,
+          handleWordPress,
+          wordData,
         ),
       });
     }

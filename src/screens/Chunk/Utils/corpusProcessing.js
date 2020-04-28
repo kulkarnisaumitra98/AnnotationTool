@@ -14,7 +14,7 @@ export const getListItemCorpus = (textStyle, fields) => {
       return (
         <Text key={i}>
           <Text style={[{ backgroundColor: 'yellow' }, textStyle]}>{item}</Text>
-          {' '}
+          {/* {' '} */}
         </Text>
       );
     }
@@ -24,7 +24,7 @@ export const getListItemCorpus = (textStyle, fields) => {
     return (
       <Text key={index} style={textStyle}>
         {item}
-        {' '}
+        {/* {' '} */}
       </Text>
     );
   });
@@ -33,7 +33,7 @@ export const getListItemCorpus = (textStyle, fields) => {
 };
 
 
-export const getSelectedCorpus = (textStyle, fields, setWord) => {
+export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
   let index = 0;
   const { corpus, pronoun_off_start } = fields;
 
@@ -44,12 +44,26 @@ export const getSelectedCorpus = (textStyle, fields, setWord) => {
       return (
         <Text key={i}>
           <Text style={[{ backgroundColor: 'yellow' }, textStyle]}>{item}</Text>
-          {' '}
+          {/* {' '} */}
         </Text>
       );
     }
 
     index += item.length + 1;
+
+    if (words) {
+      const wordKeys = Object.keys(words);
+      for (let j = 0; j < wordKeys.length; j += 1) {
+        if (words[wordKeys[j]].index === i) {
+          return (
+            <Text key={index} style={[textStyle, { backgroundColor: words[wordKeys[j]].color }]}>
+              {item}
+              {/* {' '} */}
+            </Text>
+          );
+        }
+      }
+    }
 
     return (
       <Text
@@ -58,34 +72,10 @@ export const getSelectedCorpus = (textStyle, fields, setWord) => {
         style={textStyle}
       >
         {item}
-        {' '}
+        {/* {' '} */}
       </Text>
     );
   });
 
   return texts;
-};
-
-
-export const highlightWord = (
-  chunk,
-  value,
-  offset,
-  index,
-  color,
-  op,
-) => {
-  // update the handle press method of all other mini chunks
-  const updatedChunk = [...chunk];
-  updatedChunk[index] = (
-    <Text key={index}>
-      <Text style={{ fontSize: 24, backgroundColor: color }}>
-        {value}
-      </Text>
-      {' '}
-    </Text>
-  );
-  console.log(op, 'oppppp');
-
-  return updatedChunk;
 };

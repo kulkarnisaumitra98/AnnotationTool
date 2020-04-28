@@ -16,24 +16,52 @@ const Table = ({
         <Text style={styles.textStyle}>
           Correct Noun =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{A.value}</Text>
+          <Text
+            style={{
+						  fontWeight: 'bold',
+						  color: A.value !== 'None' ? 'green' : TEXT_BLACK,
+            }}
+          >
+            {A.value}
+          </Text>
         </Text>
         <Text style={styles.textStyle}>
           Offset =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{A.offset}</Text>
+          <Text
+            style={{
+						  fontWeight: 'bold',
+						  color: A.value !== 'None' ? 'green' : TEXT_BLACK,
+            }}
+          >
+            {A.offset}
+          </Text>
         </Text>
       </View>
       <View style={styles.wordCont}>
         <Text style={styles.textStyle}>
           Misleading Noun =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{B.value}</Text>
+          <Text
+            style={{
+						  fontWeight: 'bold',
+						  color: B.value !== 'None' ? 'red' : TEXT_BLACK,
+            }}
+          >
+            {B.value}
+          </Text>
         </Text>
         <Text style={styles.textStyle}>
           Offset =
           {' '}
-          <Text style={{ fontWeight: 'bold' }}>{B.offset}</Text>
+          <Text
+            style={{
+						  fontWeight: 'bold',
+						  color: B.value !== 'None' ? 'red' : TEXT_BLACK,
+            }}
+          >
+            {B.offset}
+          </Text>
         </Text>
       </View>
     </RowContainer>
