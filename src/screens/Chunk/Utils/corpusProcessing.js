@@ -14,7 +14,6 @@ export const getListItemCorpus = (textStyle, fields) => {
       return (
         <Text key={i}>
           <Text style={[{ backgroundColor: 'yellow' }, textStyle]}>{item}</Text>
-          {/* {' '} */}
         </Text>
       );
     }
@@ -34,6 +33,7 @@ export const getListItemCorpus = (textStyle, fields) => {
 
 
 export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
+  console.log(words, 'words');
   let index = 0;
   const { corpus, pronoun_off_start } = fields;
 
@@ -44,7 +44,6 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
       return (
         <Text key={i}>
           <Text style={[{ backgroundColor: 'yellow' }, textStyle]}>{item}</Text>
-          {/* {' '} */}
         </Text>
       );
     }
@@ -58,7 +57,7 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
           return (
             <Text key={index} style={[textStyle, { backgroundColor: words[wordKeys[j]].color }]}>
               {item}
-              {/* {' '} */}
+
             </Text>
           );
         }

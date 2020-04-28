@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 
-const Cross = ({ closeAction, crossStyle }) => (
-  <Text style={[styles.cross, crossStyle]} onPress={closeAction}>
+const Cross = ({ closeAction, crossStyle, color }) => (
+  <Text style={[styles.cross, crossStyle, { color }]} onPress={closeAction}>
     x
   </Text>
 );

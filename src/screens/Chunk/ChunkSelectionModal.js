@@ -10,7 +10,7 @@ import PickerContainer from './PickerContainer';
 import Table from './Table';
 
 const ChunkSelectionModal = ({
-  visible, closeModal, data, chunk,
+  visible, closeModal, data, chunk, setData,
 }) => (
   <Modal
     visible={visible}
@@ -29,6 +29,7 @@ const ChunkSelectionModal = ({
           <View style={{ flexDirection: 'row' }}>
             <PickerContainer />
             <Button
+              disabled
               title="Add Entry"
               handlePress={() => {}}
               containerStyle={styles.button}
@@ -44,7 +45,7 @@ const ChunkSelectionModal = ({
             {chunk}
           </RowContainer>
         </ScrollView>
-        <Table data={data} />
+        <Table data={data} setData={setData} />
       </View>
     </View>
   </Modal>

@@ -9,6 +9,7 @@ import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
 import { useFetch } from './useFetch';
 import { getSelectedCorpus } from './Utils/corpusProcessing';
+import getInitialWord from './Utils/getInitialWord';
 
 const TASKS = 2;
 
@@ -47,12 +48,8 @@ const ChunkScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const initialState = {
-    A: {
-      value: 'None', offset: 'None', index: null, color: BagSuccess,
-    },
-    B: {
-      value: 'None', offset: 'None', index: null, color: BagError,
-    },
+    A: getInitialWord(BagSuccess),
+    B: getInitialWord(BagError),
   };
 
   const [wordData, setData] = useState(initialState);
@@ -60,7 +57,19 @@ const ChunkScreen = () => {
 
   useEffect(() => {
     setOperation(getNextOperation(wordData));
-  }, [wordData]);
+
+    if (currentChunk.index !== null) {
+      setCurrentChunk({
+        index: currentChunk.index,
+        chunk: getSelectedCorpus(
+          { fontSize: 24, marginRight: 6 },
+          data[currentChunk.index].fields,
+          handleWordPress,
+          wordData,
+        ),
+      });
+    }
+  }, [wordData, operation]);
 
   useEffect(() => {
     if (currentChunk.index !== null) {
@@ -76,19 +85,6 @@ const ChunkScreen = () => {
     }
   }, [currentChunk.index]);
 
-  useEffect(() => {
-    if (currentChunk.index !== null) {
-      setCurrentChunk({
-        index: currentChunk.index,
-        chunk: getSelectedCorpus(
-          { fontSize: 24, marginRight: 6 },
-          data[currentChunk.index].fields,
-          handleWordPress,
-          wordData,
-        ),
-      });
-    }
-  }, [operation]);
 
   const handleWordPress = (value, offset, index) => () => setData((prevData) => ({
     ...prevData,
@@ -108,6 +104,7 @@ const ChunkScreen = () => {
               visible={modalVisible}
               data={wordData}
               chunk={currentChunk.chunk}
+              setData={setData}
               closeModal={() => setModalVisible(false)}
             />
           ) : null}

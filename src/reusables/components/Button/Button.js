@@ -10,12 +10,23 @@ const Button = ({
   title,
   containerStyle,
   textStyle,
+  disabled,
 }) => (
   <TouchableOpacity
-    style={[styles.container, containerStyle, long ? dimensionStyles.w_100 : null]}
+    disabled={disabled}
+    style={[
+		  styles.container,
+		  containerStyle,
+		  long ? dimensionStyles.w_100 : null,
+		  disabled ? { backgroundColor: '#A6ABBA', elevation: 0, shadowColor: '#fff' } : null,
+    ]}
     onPress={handlePress}
   >
-    <MyText style={[styles.text, textStyle]}>{title}</MyText>
+    <MyText
+      style={[styles.text, textStyle, disabled ? { color: '#EBEBEB' } : null]}
+    >
+      {title}
+    </MyText>
   </TouchableOpacity>
 );
 

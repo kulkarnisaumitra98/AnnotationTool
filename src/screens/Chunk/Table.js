@@ -1,37 +1,53 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import Button from '../../reusables/components/Button/Button';
 import RowContainer from '../../reusables/components/Containers/RowContainer';
-import { TEXT_BLACK } from '../../reusables/styles/colors';
+import { BagError, BagSuccess, TEXT_BLACK } from '../../reusables/styles/colors';
+import getInitialWord from './Utils/getInitialWord';
 
 const Table = ({
-  data,
+  data, setData,
 }) => {
   const {
     A, B,
   } = data;
 
+  const isA = A.value !== 'None';
+  const isB = B.value !== 'None';
+
   return (
     <RowContainer contStyle={styles.container}>
       <View style={styles.wordCont}>
-        <Text style={styles.textStyle}>
-          Correct Noun =
-          {' '}
-          <Text
-            style={{
-						  fontWeight: 'bold',
-						  color: A.value !== 'None' ? 'green' : TEXT_BLACK,
-            }}
-          >
-            {A.value}
+        <RowContainer>
+          <Text style={styles.textStyle}>
+            Correct Noun =
+            {' '}
+            <Text
+              style={{
+							  fontWeight: 'bold',
+							  color: isA ? 'green' : TEXT_BLACK,
+              }}
+            >
+              {A.value}
+            </Text>
           </Text>
-        </Text>
+          <Button
+            disabled={!isA}
+            containerStyle={{ backgroundColor: 'red', height: 28 }}
+            title="Remove"
+            handlePress={() => setData((prevData) => ({
+						    ...prevData,
+						    A: getInitialWord(BagSuccess),
+						  }))}
+          />
+        </RowContainer>
         <Text style={styles.textStyle}>
           Offset =
           {' '}
           <Text
             style={{
 						  fontWeight: 'bold',
-						  color: A.value !== 'None' ? 'green' : TEXT_BLACK,
+						  color: isA ? 'green' : TEXT_BLACK,
             }}
           >
             {A.offset}
@@ -39,25 +55,36 @@ const Table = ({
         </Text>
       </View>
       <View style={styles.wordCont}>
-        <Text style={styles.textStyle}>
-          Misleading Noun =
-          {' '}
-          <Text
-            style={{
-						  fontWeight: 'bold',
-						  color: B.value !== 'None' ? 'red' : TEXT_BLACK,
-            }}
-          >
-            {B.value}
+        <RowContainer>
+          <Text style={styles.textStyle}>
+            Misleading Noun =
+            {' '}
+            <Text
+              style={{
+							  fontWeight: 'bold',
+							  color: isB ? 'red' : TEXT_BLACK,
+              }}
+            >
+              {B.value}
+            </Text>
           </Text>
-        </Text>
+          <Button
+            disabled={!isB}
+            containerStyle={{ backgroundColor: 'red', height: 28 }}
+            title="Remove"
+            handlePress={() => setData((prevData) => ({
+						    ...prevData,
+						    B: getInitialWord(BagError),
+						  }))}
+          />
+        </RowContainer>
         <Text style={styles.textStyle}>
           Offset =
           {' '}
           <Text
             style={{
 						  fontWeight: 'bold',
-						  color: B.value !== 'None' ? 'red' : TEXT_BLACK,
+						  color: isB ? 'red' : TEXT_BLACK,
             }}
           >
             {B.offset}
