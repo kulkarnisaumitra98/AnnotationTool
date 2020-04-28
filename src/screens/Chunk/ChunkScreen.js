@@ -44,6 +44,8 @@ const ChunkScreen = () => {
     chunk: null,
   });
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   const initialState = {
     A: {
       value: 'None', offset: 'None', index: null, color: BagSuccess,
@@ -62,6 +64,7 @@ const ChunkScreen = () => {
 
   useEffect(() => {
     if (currentChunk.index !== null) {
+      setData(initialState); // Should bw able to add async await here, read later about async useffect hook
       setCurrentChunk({
         index: currentChunk.index,
         chunk: getSelectedCorpus(
@@ -72,8 +75,6 @@ const ChunkScreen = () => {
       });
     }
   }, [currentChunk.index]);
-
-  // const prevOperation = usePrevious(operation);
 
   useEffect(() => {
     if (currentChunk.index !== null) {
@@ -101,13 +102,13 @@ const ChunkScreen = () => {
       {!loading ? (
         <>
           <Title title="Chunks" />
-          <ChunksList data={data} setIndex={setCurrentChunk} />
+          <ChunksList data={data} setIndex={setCurrentChunk} modelToggle={setModalVisible} />
           {currentChunk.index !== null ? (
             <ChunkSelectionModal
-              visible={Boolean(currentChunk.index + 1)}
+              visible={modalVisible}
               data={wordData}
               chunk={currentChunk.chunk}
-              closeModal={() => setCurrentChunk({ index: null, chunk: null })}
+              closeModal={() => setModalVisible(false)}
             />
           ) : null}
         </>

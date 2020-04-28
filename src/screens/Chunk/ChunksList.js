@@ -14,12 +14,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const ChunksList = ({ data, setIndex }) => {
+const ChunksList = ({ data, setIndex, modelToggle }) => {
   const Row = ({ fields, index }) => {
     const chunk = getListItemCorpus({ fontSize: 20, marginRight: 6 }, fields);
     return (
       <TouchableOpacity
-        onPress={() => setIndex((prevData) => ({ ...prevData, index }))}
+        onPress={() => {
+          setIndex((prevData) => ({ ...prevData, index }));
+          modelToggle(true);
+        }}
         style={styles.row}
       >
         <Text numberOfLines={1} style={[marginStyles.ml_12, {}]}>
