@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Button from '../../reusables/components/Button/Button';
 import RowContainer from '../../reusables/components/Containers/RowContainer';
 import { BagError, BagSuccess, TEXT_BLACK } from '../../reusables/styles/colors';
+import { paddingStyles } from '../../reusables/styles/style';
 import getInitialWord from './Utils/getInitialWord';
 
 const Table = ({
@@ -18,7 +19,7 @@ const Table = ({
   return (
     <RowContainer contStyle={styles.container}>
       <View style={styles.wordCont}>
-        <RowContainer>
+        <RowContainer contStyle={paddingStyles.p_0}>
           <Text style={styles.textStyle}>
             Correct Noun =
             {' '}
@@ -33,7 +34,7 @@ const Table = ({
           </Text>
           <Button
             disabled={!isA}
-            containerStyle={{ backgroundColor: 'red', height: 28 }}
+            containerStyle={styles.button}
             title="Remove"
             handlePress={() => setData((prevData) => ({
 						    ...prevData,
@@ -55,7 +56,7 @@ const Table = ({
         </Text>
       </View>
       <View style={styles.wordCont}>
-        <RowContainer>
+        <RowContainer contStyle={paddingStyles.p_0}>
           <Text style={styles.textStyle}>
             Misleading Noun =
             {' '}
@@ -70,7 +71,7 @@ const Table = ({
           </Text>
           <Button
             disabled={!isB}
-            containerStyle={{ backgroundColor: 'red', height: 28 }}
+            containerStyle={styles.button}
             title="Remove"
             handlePress={() => setData((prevData) => ({
 						    ...prevData,
@@ -115,6 +116,12 @@ const styles = StyleSheet.create({
     // fontWeight: 'bold',
     fontSize: 20,
     color: TEXT_BLACK,
+    margin: 8,
+  },
+
+  button: {
+    backgroundColor: '#ff8469',
+    height: 28,
     margin: 8,
   },
 });

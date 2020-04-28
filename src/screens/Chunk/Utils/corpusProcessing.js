@@ -33,7 +33,6 @@ export const getListItemCorpus = (textStyle, fields) => {
 
 
 export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
-  console.log(words, 'words');
   let index = 0;
   const { corpus, pronoun_off_start } = fields;
 
@@ -71,7 +70,6 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
         style={textStyle}
       >
         {item}
-        {/* {' '} */}
       </Text>
     );
   });

@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
@@ -5,6 +6,7 @@ import FlexedContainer from '../../reusables/components/Containers/FlexedContain
 import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
+import notNull from '../Common/Utils/general';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
 import { useFetch } from './useFetch';
@@ -46,7 +48,8 @@ const ChunkScreen = () => {
   });
 
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [gender, setGender] = useState(0);
+  const [addEntry, setAddEntry] = useState(false);
   const initialState = {
     A: getInitialWord(BagSuccess),
     B: getInitialWord(BagError),
@@ -54,6 +57,15 @@ const ChunkScreen = () => {
 
   const [wordData, setData] = useState(initialState);
   const [operation, setOperation] = useState(0);
+
+
+  useEffect(() => {
+    if (parseInt(gender) && notNull(wordData.A.index) && notNull(wordData.B.index)) {
+      setAddEntry(true);
+    } else {
+      setAddEntry(false);
+    }
+  }, [gender, wordData]);
 
   useEffect(() => {
     setOperation(getNextOperation(wordData));
@@ -69,7 +81,7 @@ const ChunkScreen = () => {
         ),
       });
     }
-  }, [wordData, operation]);
+  }, [wordData, operation]); // Explain this later
 
   useEffect(() => {
     if (currentChunk.index !== null) {
@@ -98,7 +110,11 @@ const ChunkScreen = () => {
       {!loading ? (
         <>
           <Title title="Chunks" />
-          <ChunksList data={data} setIndex={setCurrentChunk} modelToggle={setModalVisible} />
+          <ChunksList
+            data={data}
+            setIndex={setCurrentChunk}
+            modelToggle={setModalVisible}
+          />
           {currentChunk.index !== null ? (
             <ChunkSelectionModal
               visible={modalVisible}
@@ -106,6 +122,9 @@ const ChunkScreen = () => {
               chunk={currentChunk.chunk}
               setData={setData}
               closeModal={() => setModalVisible(false)}
+              gender={gender}
+              setGender={setGender}
+              addEntry={addEntry}
             />
           ) : null}
         </>

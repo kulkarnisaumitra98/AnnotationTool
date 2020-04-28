@@ -10,7 +10,14 @@ import PickerContainer from './PickerContainer';
 import Table from './Table';
 
 const ChunkSelectionModal = ({
-  visible, closeModal, data, chunk, setData,
+  visible,
+  closeModal,
+  data,
+  chunk,
+  setData,
+  gender,
+  setGender,
+  addEntry,
 }) => (
   <Modal
     visible={visible}
@@ -27,9 +34,9 @@ const ChunkSelectionModal = ({
         >
           <Title title="Current Operation" textStyle={paddingStyles.p_0} />
           <View style={{ flexDirection: 'row' }}>
-            <PickerContainer />
+            <PickerContainer gender={gender} setGender={setGender} />
             <Button
-              disabled
+              disabled={!addEntry}
               title="Add Entry"
               handlePress={() => {}}
               containerStyle={styles.button}
