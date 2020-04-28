@@ -65,7 +65,7 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
 
     return (
       <Text
-        onPress={setWord(item, `${index - item.length - 1}, ${index}`, i)}
+        onPress={setWord(item, `${index - item.length - 1}, ${index - 1}`, i)}
         key={index}
         style={textStyle}
       >

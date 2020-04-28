@@ -18,6 +18,7 @@ module.exports = {
 	},
 	plugins: ["react", "react-native", "react-hooks"],
 	rules: {
+		"max-len": "warn",
 		"no-tabs": ["warn", { allowIndentationTabs: true }],
 		"no-mixed-spaces-and-tabs": ["warn", "smart-tabs"],
 		"object-curly-spacing": ["warn"],

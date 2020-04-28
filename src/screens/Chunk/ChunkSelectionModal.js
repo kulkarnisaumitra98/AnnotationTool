@@ -18,6 +18,8 @@ const ChunkSelectionModal = ({
   gender,
   setGender,
   addEntry,
+  handleAddEntry,
+  operationName,
 }) => (
   <Modal
     visible={visible}
@@ -32,13 +34,13 @@ const ChunkSelectionModal = ({
           justifyContent="space-between"
           contStyle={[paddingStyles.p_4]}
         >
-          <Title title="Current Operation" textStyle={paddingStyles.p_0} />
+          <Title title={operationName} textStyle={paddingStyles.p_0} />
           <View style={{ flexDirection: 'row' }}>
-            <PickerContainer gender={gender} setGender={setGender} />
+            <PickerContainer gender={data.gender} setGender={setData} />
             <Button
               disabled={!addEntry}
               title="Add Entry"
-              handlePress={() => {}}
+              handlePress={handleAddEntry}
               containerStyle={styles.button}
               textStyle={{ fontWeight: 'bold' }}
             />

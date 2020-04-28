@@ -5,7 +5,7 @@ const PickerContainer = ({ setGender, gender }) => (
   <View style={styles.container}>
     <Picker
       selectedValue={gender}
-      onValueChange={(value) => setGender(value)}
+      onValueChange={(value) => setGender((prevData) => ({ ...prevData, gender: value }))}
       style={{ alignItems: 'center' }}
     >
       <Picker.Item label="--Select Gender--" value={0} />

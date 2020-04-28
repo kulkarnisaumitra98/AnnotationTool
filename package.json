@@ -8,7 +8,9 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "expo": "~37.0.3",
+    "js-cookie": "^2.2.1",
     "modal-react-native-web": "^0.2.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
@@ -18,7 +20,6 @@
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "@expo/webpack-config": "^0.12.1",
-    "axios": "^0.19.2",
     "babel-eslint": "^10.1.0",
     "babel-preset-expo": "~8.1.0",
     "eslint": "^6.8.0",
