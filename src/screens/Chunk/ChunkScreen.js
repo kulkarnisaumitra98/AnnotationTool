@@ -1,12 +1,14 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
+import UserContext from '../../contexts/UserContext';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
 import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
+import useRenderCount from '../Common/useRenderCount';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
 import { useFetch } from './useFetch';
@@ -14,17 +16,14 @@ import { getSelectedCorpus } from './Utils/corpusProcessing';
 import { getNextOperation, getOperationName, operationToWord } from './Utils/general';
 import getInitialWord from './Utils/getInitialWord';
 
-
-// Have a select operation for generalised app rather than providing your own flow for annotataion,
-// Because it adds unneccasry complexcity
+axios.defaults.withCredentials = true;
 
 const ChunkScreen = () => {
   const { data, loading } = useFetch(
-    'http://127.0.0.1:8000/get_corpora/',
-    {
-      page: 1,
-    },
+    'http://127.0.0.1:9996/get_corpora/', { page: 1 },
   );
+
+  const { user } = useContext(UserContext);
 
   // const [page, setPage] = useState(1);
 
@@ -46,10 +45,9 @@ const ChunkScreen = () => {
   const [operation, setOperation] = useState(0);
 
   useEffect(() => {
-    console.log(wordData, 'genfer', operation);
     const operationNumber = getNextOperation(wordData);
     setOperation(operationNumber);
-  }, [wordData]); // Explain this later
+  }, [wordData]);
 
   useEffect(() => {
     if (operation === 3) {
@@ -99,17 +97,24 @@ const ChunkScreen = () => {
   };
 
   const sendData = async () => {
+    const [startA, endA] = wordData.A.offset.split(',').map((item) => parseInt(item));
+    const [startB, endB] = wordData.B.offset.split(',').map((item) => parseInt(item));
+
     // const csrftoken = Cookies.get('csrftoken');
 
     try {
       const response = await axios.post(
-        'http://127.0.0.1:8000/add_entry_user/',
+        'http://127.0.0.1:9996/add_entry_user/',
         {
           correct_noun: wordData.A.value,
-          correct_noun_off_start: wordData.A.offset,
+          correct_noun_off_start: startA,
+          correct_noun_off_end: endA,
           mislead_noun: wordData.B.value,
-          mislead_noun_off_start: wordData.B.offset,
-          gender: wordData.gender,
+          mislead_noun_off_start: startB,
+          mislead_noun_off_end: endB,
+          gender: parseInt(wordData.gender) - 1,
+          corpus: data[currentChunk.index].pk,
+          user: user.id,
           // csrftoken,
         },
       );
@@ -119,6 +124,8 @@ const ChunkScreen = () => {
       console.log(err);
     }
   };
+
+  useRenderCount();
 
   return (
     <FlexedContainer>

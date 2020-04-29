@@ -20,7 +20,7 @@ const AuthScreen = () => {
   )
     : (
       <FlexedContainer contStyle={positionStyles.jcc}>
-        <RowContainer>
+        <RowContainer justifyContent="space-around">
           {content}
         </RowContainer>
       </FlexedContainer>

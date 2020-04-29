@@ -1,10 +1,15 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
+import ScreenContext from './src/contexts/ScreenContext';
+import UserContext from './src/contexts/UserContext';
 import FlexedContainer from './src/reusables/components/Containers/FlexedContainer';
 import { WHITE } from './src/reusables/styles/colors';
 import { borderStyles, paddingStyles } from './src/reusables/styles/style';
 import AuthScreen from './src/screens/Auth/AuthScreen';
 import ChunkScreen from './src/screens/Chunk/ChunkScreen';
+
+axios.defaults.withCredentials = true;
 
 export const AUTHSCREEN = 'AuthScreen';
 export const CHUNKSCREEN = 'CHUNKSCREEN';
@@ -22,20 +27,32 @@ const switchScreen = (choice) => {
   }
 };
 
-const App = () => (
-  <SafeAreaView style={styles.container}>
-    <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
-      {switchScreen(CHUNKSCREEN)}
-    </FlexedContainer>
-  </SafeAreaView>
-);
+const App = () => {
+  const [screen, setScreen] = useState(AUTHSCREEN);
+  const [user, setUser] = useState({
+    id: null,
+    username: null,
+    name: null,
+  });
+  return (
+    <ScreenContext.Provider value={{ setScreen }}>
+      <UserContext.Provider value={{ user, setUser }}>
+        <SafeAreaView style={styles.container}>
+          <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
+            {switchScreen(screen)}
+          </FlexedContainer>
+        </SafeAreaView>
+      </UserContext.Provider>
+    </ScreenContext.Provider>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: WHITE,
     marginTop: StatusBar.currentHeight,
-    borderWidth: 0,
+    borderWidth: 1,
     borderColor: 'red',
   },
 });
