@@ -34,7 +34,7 @@ const ChunkSelectionModal = ({
           justifyContent="space-between"
           contStyle={[paddingStyles.p_4]}
         >
-          <Title title={operationName} textStyle={paddingStyles.p_0} />
+          <Title title={addEntry ? 'All Done!!' : operationName} textStyle={paddingStyles.p_0} />
           <View style={{ flexDirection: 'row' }}>
             <PickerContainer gender={data.gender} setGender={setData} />
             <Button

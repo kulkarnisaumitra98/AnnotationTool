@@ -14,15 +14,14 @@ export const operationToWord = (operation) => {
 export const getNextOperation = (data) => {
   let index = 0;
   const taskArr = Object.keys(data);
-  for (let i = 0; i < taskArr.length; i += 1) {
+  for (let i = 0; i < taskArr.length - 1; i += 1) {
     if (data[taskArr[i]].value !== 'None') index += 1;
-    else if (data.gender) index += 1;
     else {
-      // return index === TASKS ? index - 1 : index;
       return index;
     }
   }
-  return index;
+
+  return data.gender ? index + 1 : index;
 };
 
 
@@ -34,9 +33,7 @@ export const getOperationName = (operation) => {
       return 'Select Misleading Noun';
     case 2:
       return 'Select Gender';
-    case 3:
-      return 'All Done!!';
     default:
-      return 'Sex';
+      return 'Error';
   }
 };

@@ -15,10 +15,16 @@ import { getNextOperation, getOperationName, operationToWord } from './Utils/gen
 import getInitialWord from './Utils/getInitialWord';
 
 
+// Have a select operation for generalised app rather than providing your own flow for annotataion,
+// Because it adds unneccasry complexcity
+
 const ChunkScreen = () => {
-  const { data, loading } = useFetch('http://127.0.0.1:8000/get_corpora/', {
-    page: 1,
-  });
+  const { data, loading } = useFetch(
+    'http://127.0.0.1:8000/get_corpora/',
+    {
+      page: 1,
+    },
+  );
 
   // const [page, setPage] = useState(1);
 
@@ -39,38 +45,30 @@ const ChunkScreen = () => {
   const [wordData, setData] = useState(initialState);
   const [operation, setOperation] = useState(0);
 
-
-  // useEffect(() => {
-  //   if (parseInt(gender) && notNull(wordData.A.index) && notNull(wordData.B.index)) {
-  //     setAddEntry(true);
-  //   } else {
-  //     setAddEntry(false);
-  //   }
-  // }, [gender, wordData]);
-
-  // useEffect(() => {
-  // }, [gender, wordData]);
+  useEffect(() => {
+    console.log(wordData, 'genfer', operation);
+    const operationNumber = getNextOperation(wordData);
+    setOperation(operationNumber);
+  }, [wordData]); // Explain this later
 
   useEffect(() => {
     if (operation === 3) {
       setAddEntry(true);
     } else {
       setAddEntry(false);
-      setOperation(getNextOperation(wordData));
-
-      if (currentChunk.index !== null) {
-        setCurrentChunk({
-          index: currentChunk.index,
-          chunk: getSelectedCorpus(
-            { fontSize: 24, marginRight: 6 },
-            data[currentChunk.index].fields,
-            handleWordPress,
-            wordData,
-          ),
-        });
-      }
     }
-  }, [wordData, operation]); // Explain this later
+    if (currentChunk.index !== null) {
+      setCurrentChunk({
+        index: currentChunk.index,
+        chunk: getSelectedCorpus(
+          { fontSize: 24, marginRight: 6 },
+          data[currentChunk.index].fields,
+          addEntry ? () => {} : handleWordPress,
+          wordData,
+        ),
+      });
+    }
+  }, [wordData, operation, addEntry]);
 
   useEffect(() => {
     if (currentChunk.index !== null) {
@@ -86,26 +84,35 @@ const ChunkScreen = () => {
     }
   }, [currentChunk.index]);
 
+  const handleWordPress = (value, offset, index) => () => {
+    if (operation === 2) return;
 
-  const handleWordPress = (value, offset, index) => () => setData((prevData) => ({
-    ...prevData,
-    [operationToWord(operation)]: {
-      ...prevData[operationToWord(operation)], value, offset, index,
-    },
-  }));
+    setData((prevData) => ({
+      ...prevData,
+      [operationToWord(operation)]: {
+        ...prevData[operationToWord(operation)],
+        value,
+        offset,
+        index,
+      },
+    }));
+  };
 
   const sendData = async () => {
     // const csrftoken = Cookies.get('csrftoken');
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/add_entry_user/', {
-        correct_noun: wordData.A.value,
-        correct_noun_off_start: wordData.A.offset,
-        mislead_noun: wordData.B.value,
-        mislead_noun_off_start: wordData.B.offset,
-        gender: wordData.gender,
-        // csrftoken,
-      });
+      const response = await axios.post(
+        'http://127.0.0.1:8000/add_entry_user/',
+        {
+          correct_noun: wordData.A.value,
+          correct_noun_off_start: wordData.A.offset,
+          mislead_noun: wordData.B.value,
+          mislead_noun_off_start: wordData.B.offset,
+          gender: wordData.gender,
+          // csrftoken,
+        },
+      );
 
       console.log(response.data, 'dd');
     } catch (err) {
@@ -130,8 +137,8 @@ const ChunkScreen = () => {
               chunk={currentChunk.chunk}
               setData={setData}
               closeModal={() => setModalVisible(false)}
-              // gender={gender}
-              // setGender={setGender}
+										// gender={gender}
+										// setGender={setGender}
               addEntry={addEntry}
               handleAddEntry={sendData}
               operationName={getOperationName(operation)}
