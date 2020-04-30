@@ -1,8 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { CHUNKSCREEN } from '../../../../App';
 import ScreenContext from '../../../contexts/ScreenContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
+import { sendAlert } from '../../Common/Utils/alert';
 import { axiosPost } from '../../Common/Utils/axiosConfig';
 import { validate } from './Utils';
 
@@ -38,8 +40,7 @@ const SignupForm = () => {
         flag = true;
       }
     });
-    console.log(newFields);
-    if (true) { setFields(newFields); } else {
+    if (flag) { setFields(newFields); } else {
       const _data = {
         first_name: name.value,
         username: username.value,
@@ -49,8 +50,9 @@ const SignupForm = () => {
       const { data, err, status } = await axiosPost('register/', _data);
 
       if (status === 200) {
-      // console.log(data);
-      // context.setScreen(CHUNKSCREEN);
+        context.setScreen(CHUNKSCREEN);
+      } else {
+        sendAlert('Some error occured');
       }
     }
   };
