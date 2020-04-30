@@ -1,13 +1,17 @@
-import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { CHUNKSCREEN } from '../../../../App';
+import ScreenContext from '../../../contexts/ScreenContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
+import { axiosPost } from '../../Common/Utils/axiosConfig';
 import { validate } from './Utils';
 
 const PLACEHOLDERCOLOR = '#888';
 
 const SignupForm = () => {
+  const context = useContext(ScreenContext);
+
   const [fields, setFields] = useState({
     name: { value: '', err: '' },
     username: { value: '', err: '' },
@@ -28,18 +32,17 @@ const SignupForm = () => {
   };
 
   const handlePress = async () => {
-    try {
-      const response = await axios.post(
-        'http://127.0.0.1:9996/register/', {
-          first_name: name.value,
-          username: username.value,
-          password: password.value,
-        },
-      );
+    const _data = {
+      first_name: name.value,
+      username: username.value,
+      password: password.value,
+    };
 
-      console.log(response.data, 'dd');
-    } catch (err) {
-      console.log(err);
+    const { data, err, status } = await axiosPost('register/', _data);
+
+    if (status === 200) {
+      console.log(data);
+      context.setScreen(CHUNKSCREEN);
     }
   };
 

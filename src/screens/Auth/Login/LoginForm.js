@@ -1,5 +1,5 @@
+/* eslint-disable no-underscore-dangle */
 
-import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { CHUNKSCREEN } from '../../../../App';
@@ -7,6 +7,7 @@ import ScreenContext from '../../../contexts/ScreenContext';
 import UserContext from '../../../contexts/UserContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
+import { axiosPost } from '../../Common/Utils/axiosConfig';
 import { validate } from '../Signup/Utils';
 
 
@@ -35,23 +36,21 @@ const LoginForm = () => {
   };
 
   const handlePress = async () => {
-    try {
-      const response = await axios.post('http://127.0.0.1:9996/login/', {
-        username: username.value,
-        password: password.value,
-      });
+    const _data = {
+      username: username.value,
+      password: password.value,
+    };
 
-      if (response.status === 200) {
-        userContext.setUser({
-          ...response.data,
-        });
-        context.setScreen(CHUNKSCREEN);
-      }
-      console.log(response, 'login');
-    } catch (err) {
-      console.log(err);
+    const { data, err, status } = await axiosPost('login/', _data);
+
+    if (status === 200) {
+      userContext.setUser({
+        ...data,
+      });
+      context.setScreen(CHUNKSCREEN);
     }
   };
+
 
   const { username, password } = fields;
 

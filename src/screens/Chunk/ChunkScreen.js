@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 import axios from 'axios';
@@ -8,10 +9,11 @@ import FlexedContainer from '../../reusables/components/Containers/FlexedContain
 import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
-import useRenderCount from '../Common/useRenderCount';
+import { sendAlert } from '../Common/Utils/alert';
+import { axiosPost } from '../Common/Utils/axiosConfig';
+import { useFetch } from '../Common/Utils/useFetch';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
-import { useFetch } from './useFetch';
 import { getSelectedCorpus } from './Utils/corpusProcessing';
 import { getNextOperation, getOperationName, operationToWord } from './Utils/general';
 import getInitialWord from './Utils/getInitialWord';
@@ -20,7 +22,9 @@ axios.defaults.withCredentials = true;
 
 const ChunkScreen = () => {
   const { data, loading } = useFetch(
-    'http://127.0.0.1:9996/get_corpora/', { page: 1 },
+    'get_corpora/',
+    { page: 1 },
+    (_data) => JSON.parse(_data.corpora),
   );
 
   const { user } = useContext(UserContext);
@@ -33,8 +37,8 @@ const ChunkScreen = () => {
   });
 
   const [modalVisible, setModalVisible] = useState(false);
-  // const [gender, setGender] = useState(0);
   const [addEntry, setAddEntry] = useState(false);
+
   const initialState = {
     A: getInitialWord(BagSuccess),
     B: getInitialWord(BagError),
@@ -96,36 +100,27 @@ const ChunkScreen = () => {
     }));
   };
 
-  const sendData = async () => {
+  const dataToServer = async () => {
     const [startA, endA] = wordData.A.offset.split(',').map((item) => parseInt(item));
     const [startB, endB] = wordData.B.offset.split(',').map((item) => parseInt(item));
 
-    // const csrftoken = Cookies.get('csrftoken');
+    const _data = {
+      correct_noun: wordData.A.value,
+      correct_noun_off_start: startA,
+      correct_noun_off_end: endA,
+      mislead_noun: wordData.B.value,
+      mislead_noun_off_start: startB,
+      mislead_noun_off_end: endB,
+      gender: parseInt(wordData.gender) - 1,
+      corpus: data[currentChunk.index].pk,
+      user: user.id,
+    };
 
-    try {
-      const response = await axios.post(
-        'http://127.0.0.1:9996/add_entry_user/',
-        {
-          correct_noun: wordData.A.value,
-          correct_noun_off_start: startA,
-          correct_noun_off_end: endA,
-          mislead_noun: wordData.B.value,
-          mislead_noun_off_start: startB,
-          mislead_noun_off_end: endB,
-          gender: parseInt(wordData.gender) - 1,
-          corpus: data[currentChunk.index].pk,
-          user: user.id,
-          // csrftoken,
-        },
-      );
-
-      console.log(response.data, 'dd');
-    } catch (err) {
-      console.log(err);
-    }
+    const postResponse = await axiosPost('add_entry_user/', _data);
+    sendAlert(postResponse.data.text, '', () => setModalVisible(false));
   };
 
-  useRenderCount();
+  // useRenderCount();
 
   return (
     <FlexedContainer>
@@ -144,10 +139,8 @@ const ChunkScreen = () => {
               chunk={currentChunk.chunk}
               setData={setData}
               closeModal={() => setModalVisible(false)}
-										// gender={gender}
-										// setGender={setGender}
               addEntry={addEntry}
-              handleAddEntry={sendData}
+              handleAddEntry={dataToServer}
               operationName={getOperationName(operation)}
             />
           ) : null}
