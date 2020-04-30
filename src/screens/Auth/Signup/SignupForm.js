@@ -24,21 +24,22 @@ const SignupForm = () => {
     confPassword: getInputConfig(),
   });
 
-  const handleTextChange = (field, value) => {
-    const newFields = validate(field, value, fields);
+  const handleTextChange = async (field, value) => {
+    const newFields = await validate(field, value, fields);
 
     setFields(newFields);
   };
 
   const handlePress = async () => {
-    let newFields = { ...fields };
     let flag = false;
+    const newFields = await validate('all', '', fields, true);
     Object.keys(newFields).map((field) => {
-      newFields = validate(field, newFields[field].value, newFields, true);
-      if (newFields[field].err.err) { flag = true; }
+      if (newFields[field].err.err) {
+        flag = true;
+      }
     });
-
-    if (flag) { setFields(newFields); } else {
+    console.log(newFields);
+    if (true) { setFields(newFields); } else {
       const _data = {
         first_name: name.value,
         username: username.value,

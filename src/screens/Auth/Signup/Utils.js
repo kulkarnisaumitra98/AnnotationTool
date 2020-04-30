@@ -1,3 +1,6 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable no-nested-ternary */
+import { axiosPost } from '../../Common/Utils/axiosConfig';
 import { isEmpty } from '../../Common/Utils/general';
 
 export const getInputFieldConfig = (placeholder, rest) => ({
@@ -20,7 +23,7 @@ export const getFields = (config) => {
   return fields;
 };
 
-export const validate = (field, value, fields, forcedTyped) => {
+export const validate = async (field, value, fields, forcedTyped) => {
   const newFields = { ...fields };
   let newField;
   let result;
@@ -62,12 +65,20 @@ export const validate = (field, value, fields, forcedTyped) => {
 
     case 'username':
       result = /^[A-Z]/i.test(value);
+      // const data = {};
+      const response = await axiosPost('username_exist/', {
+        username: value,
+      });
       newField = {
         value,
         typed: forcedTyped || false,
         err: {
-          err: !result,
-          value: result ? '' : 'Invalid Username Not Allowed',
+          err: !result || response.data.result,
+          value: result
+            ? !response.data.result
+              ? ''
+              : 'Username Exist'
+            : 'Invalid Username Not Allowed',
         },
       };
       break;
@@ -85,9 +96,84 @@ export const validate = (field, value, fields, forcedTyped) => {
 
       break;
 
-    default:
-      return null;
+    case 'all': {
+      // Validate all
+      result = /^[A-Z]/i.test(newFields.name.value);
+      newField = {
+        value: newFields.name.value,
+        typed: forcedTyped || false,
+        err: {
+          err: !result,
+          value: result ? '' : 'Invalid Name Not Allowed',
+        },
+      };
+
+      newFields.name = newField;
+
+      result = isEmpty(newFields.password.value);
+
+      newField = {
+        value: newFields.password.value,
+        typed: forcedTyped || false,
+        err: {
+          err: result,
+          value: result ? 'Empty Password Not Allowed' : '',
+        },
+      };
+
+      if (
+        newFields.confPassword.value
+				&& newFields.confPassword.value !== newFields.password.value
+      ) {
+        newFields.confPassword.err = {
+          err: true,
+          value: 'Passwords dont match',
+        };
+      }
+
+      newFields.password = newField;
+
+
+      result = /^[A-Z]/i.test(newFields.username.value);
+      // const data = {};
+      const { data, err, status } = await axiosPost('username_exist/', {
+        username: newFields.username.value,
+      });
+
+      newField = {
+        value,
+        typed: forcedTyped || false,
+        err: {
+          err: !result || data.result,
+          value: result
+            ? !data.result
+              ? ''
+              : 'Username Exist'
+            : 'Invalid Username Not Allowed',
+        },
+      };
+
+      newFields.username = newField;
+
+      result = newFields.confPassword.value === newFields.password.value
+				&& !isEmpty(newFields.password.value);
+      newField = {
+        value,
+        typed: forcedTyped || false,
+        err: {
+          err: !result,
+          value: result ? 'Passwords Match' : 'Passwords Dont Match',
+        },
+      };
+
+      newFields.confPassword = newField;
+
+      return newFields;
+    }
+
+    default: return newFields;
   }
+
   newFields[field] = newField;
 
   return newFields;

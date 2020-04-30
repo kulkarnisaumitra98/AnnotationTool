@@ -83,10 +83,6 @@ const styles = StyleSheet.create({
     color: '#2b2d38',
     marginBottom: 8,
   },
-
-  alertText: {
-    fontSize: 11.5,
-  },
 });
 
 export default TitledInput;
