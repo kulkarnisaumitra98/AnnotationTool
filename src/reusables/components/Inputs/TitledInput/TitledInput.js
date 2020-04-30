@@ -3,7 +3,7 @@ import React, { useContext, useRef } from 'react';
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocus } from 'react-native-web-hooks';
 import KeyboardViewContext from '../../../../contexts/KeyboardViewContext';
-import { SUCCESS_TEXT } from '../../../styles/colors';
+import { SUCCESS_TEXT, WHITE } from '../../../styles/colors';
 import { dimensionStyles } from '../../../styles/style';
 import MyText from '../../Texts/MyText';
 
@@ -28,6 +28,8 @@ const TitledInput = ({
 
   if (responsive) { context = useContext(KeyboardViewContext); }
 
+  const showError = (config.value || typed) && err;
+
   return (
     <View style={[styles.container, containerStyle]}>
       {title ? <Text style={[styles.title, titleStyle]}>{title}</Text> : null}
@@ -36,20 +38,18 @@ const TitledInput = ({
         style={[
 				  styles.inputContainer,
 				  textInputStyle,
-				  err && typed
-				    ? { borderWidth: 2, borderColor: err.err ? RED : SUCCESS_TEXT }
+				  showError
+				    ? { borderWidth: 1.2, borderColor: err.err ? RED : SUCCESS_TEXT }
 				    : null,
-				  isFocused && { backgroundColor: '#fff' },
+				  showError && { backgroundColor: WHITE },
         ]}
         {...config}
         onFocus={() => {
 				  if (context) context.toggleMode(mode, ipRef);
         }}
       />
-      {err && typed ? (
-        <MyText
-          style={[styles.alert, { color: err.err ? RED : SUCCESS_TEXT }]}
-        >
+      {showError ? (
+        <MyText style={[styles.alert, { color: err.err ? RED : SUCCESS_TEXT }]}>
           {err.value}
         </MyText>
       ) : null}

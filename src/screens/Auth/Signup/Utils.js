@@ -20,7 +20,7 @@ export const getFields = (config) => {
   return fields;
 };
 
-export const validate = (field, value, fields) => {
+export const validate = (field, value, fields, forcedTyped) => {
   const newFields = { ...fields };
   let newField;
   let result;
@@ -29,7 +29,7 @@ export const validate = (field, value, fields) => {
       result = /^[A-Z]/i.test(value);
       newField = {
         value,
-        typed: true,
+        typed: forcedTyped || false,
         err: {
           err: !result,
           value: result ? '' : 'Invalid Name Not Allowed',
@@ -42,7 +42,7 @@ export const validate = (field, value, fields) => {
 
       newField = {
         value,
-        typed: true,
+        typed: forcedTyped || false,
         err: {
           err: result,
           value: result ? 'Empty Password Not Allowed' : '',
@@ -64,7 +64,7 @@ export const validate = (field, value, fields) => {
       result = /^[A-Z]/i.test(value);
       newField = {
         value,
-        typed: true,
+        typed: forcedTyped || false,
         err: {
           err: !result,
           value: result ? '' : 'Invalid Username Not Allowed',
@@ -76,7 +76,7 @@ export const validate = (field, value, fields) => {
       result = value === newFields.password.value && !isEmpty(newFields.password.value);
       newField = {
         value,
-        typed: true,
+        typed: forcedTyped || false,
         err: {
           err: !result,
           value: result ? 'Passwords Match' : 'Passwords Dont Match',

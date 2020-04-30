@@ -8,7 +8,6 @@ import UserContext from '../../../contexts/UserContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
 import { axiosPost } from '../../Common/Utils/axiosConfig';
-import { validate } from '../Signup/Utils';
 
 
 const PLACEHOLDERCOLOR = '#888';
@@ -24,7 +23,7 @@ const LoginForm = () => {
 
   const handleTextChange = (field, value) => {
     const newFields = { ...fields };
-    const validated = validate(field, value);
+    // const validated = validate(field, value);
     const newField = {
       value,
     };

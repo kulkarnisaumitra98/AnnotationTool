@@ -34,7 +34,7 @@ const SignupForm = () => {
     let newFields = { ...fields };
     let flag = false;
     Object.keys(newFields).map((field) => {
-      newFields = validate(field, newFields[field].value, newFields);
+      newFields = validate(field, newFields[field].value, newFields, true);
       if (newFields[field].err.err) { flag = true; }
     });
 
