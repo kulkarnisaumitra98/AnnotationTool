@@ -1,10 +1,11 @@
+/* eslint-disable no-nested-ternary */
 import React, { useContext, useRef } from 'react';
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useFocus } from 'react-native-web-hooks';
 import KeyboardViewContext from '../../../../contexts/KeyboardViewContext';
 import { SUCCESS_TEXT } from '../../../styles/colors';
 import { dimensionStyles } from '../../../styles/style';
 import MyText from '../../Texts/MyText';
-
 
 const RED = 'red';
 
@@ -15,10 +16,12 @@ const TitledInput = ({
   config,
   title,
   err,
-
   mode,
+  typed,
 }) => {
   const ipRef = useRef(null);
+
+  const isFocused = useFocus(ipRef);
   const responsive = dimensionStyles.dw.width <= 400;
 
   let context;
@@ -33,14 +36,21 @@ const TitledInput = ({
         style={[
 				  styles.inputContainer,
 				  textInputStyle,
-				  config.value ? { borderColor: err ? RED : SUCCESS_TEXT } : null,
+				  err && typed
+				    ? { borderWidth: 2, borderColor: err.err ? RED : SUCCESS_TEXT }
+				    : null,
+				  isFocused && { backgroundColor: '#fff' },
         ]}
         {...config}
-        onFocus={() => { if (context) context.toggleMode(mode, ipRef); }}
+        onFocus={() => {
+				  if (context) context.toggleMode(mode, ipRef);
+        }}
       />
-      {err && config.value ? (
-        <MyText style={[styles.alert, { color: RED }]} text={err}>
-          {err}
+      {err && typed ? (
+        <MyText
+          style={[styles.alert, { color: err.err ? RED : SUCCESS_TEXT }]}
+        >
+          {err.value}
         </MyText>
       ) : null}
     </View>

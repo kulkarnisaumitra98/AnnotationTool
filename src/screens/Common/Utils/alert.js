@@ -4,7 +4,7 @@ import { Alert, Platform } from 'react-native';
 export const sendAlert = (message, title = '', onOk, onCancel) => {
   if (Platform.OS === 'web') {
     alert(message);
-    onOk();
+    if (onOk) { onOk(); }
   } else {
     Alert.alert(title, message, onOk, onCancel);
   }

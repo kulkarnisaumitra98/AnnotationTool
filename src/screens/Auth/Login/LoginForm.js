@@ -18,16 +18,15 @@ const LoginForm = () => {
   const userContext = useContext(UserContext);
 
   const [fields, setFields] = useState({
-    username: { value: '', err: '' },
-    password: { value: '', err: '' },
-
+    username: { value: '' },
+    password: { value: '' },
   });
 
   const handleTextChange = (field, value) => {
     const newFields = { ...fields };
+    const validated = validate(field, value);
     const newField = {
       value,
-      err: validate(field, value),
     };
 
     newFields[field] = newField;
@@ -64,7 +63,6 @@ const LoginForm = () => {
 					  value: username.value,
 					  onChangeText: (value) => handleTextChange('username', value),
           }}
-          err={username.err}
           mode={1}
         />
         <TitledInput
@@ -75,7 +73,6 @@ const LoginForm = () => {
 					  secureTextEntry: true,
 					  onChangeText: (value) => handleTextChange('password', value),
           }}
-          err={password.err}
           mode={1}
         />
       </View>

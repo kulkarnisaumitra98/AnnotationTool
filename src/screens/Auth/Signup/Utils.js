@@ -1,3 +1,5 @@
+import { isEmpty } from '../../Common/Utils/general';
+
 export const getInputFieldConfig = (placeholder, rest) => ({
   value: '',
   err: '',
@@ -18,14 +20,75 @@ export const getFields = (config) => {
   return fields;
 };
 
-export const validate = (field, value) => {
-  const a = false;
+export const validate = (field, value, fields) => {
+  const newFields = { ...fields };
+  let newField;
+  let result;
   switch (field) {
     case 'name':
-      if (a) return '';
-      return 'Username Exist';
+      result = /^[A-Z]/i.test(value);
+      newField = {
+        value,
+        typed: true,
+        err: {
+          err: !result,
+          value: result ? '' : 'Invalid Name Not Allowed',
+        },
+      };
+      break;
+
+    case 'password':
+      result = isEmpty(value);
+
+      newField = {
+        value,
+        typed: true,
+        err: {
+          err: result,
+          value: result ? 'Empty Password Not Allowed' : '',
+        },
+      };
+
+      if (
+        newFields.confPassword.value
+				&& newFields.confPassword.value !== value
+      ) {
+        newFields.confPassword.err = {
+          err: true,
+          value: 'Passwords dont match',
+        };
+      }
+      break;
+
+    case 'username':
+      result = /^[A-Z]/i.test(value);
+      newField = {
+        value,
+        typed: true,
+        err: {
+          err: !result,
+          value: result ? '' : 'Invalid Username Not Allowed',
+        },
+      };
+      break;
+
+    case 'confPassword':
+      result = value === newFields.password.value && !isEmpty(newFields.password.value);
+      newField = {
+        value,
+        typed: true,
+        err: {
+          err: !result,
+          value: result ? 'Passwords Match' : 'Passwords Dont Match',
+        },
+      };
+
+      break;
 
     default:
-      return true;
+      return null;
   }
+  newFields[field] = newField;
+
+  return newFields;
 };
