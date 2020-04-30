@@ -43,6 +43,7 @@ const TextAlert = ({
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     alignSelf: 'baseline',
     marginTop: 4,
     marginBottom: 4,

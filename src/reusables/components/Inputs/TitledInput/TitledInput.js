@@ -3,9 +3,9 @@ import React, { useContext, useRef } from 'react';
 import { Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocus } from 'react-native-web-hooks';
 import KeyboardViewContext from '../../../../contexts/KeyboardViewContext';
-import { SUCCESS_TEXT, WHITE } from '../../../styles/colors';
+import { SUCCESS_TEXT } from '../../../styles/colors';
 import { dimensionStyles } from '../../../styles/style';
-import MyText from '../../Texts/MyText';
+import ErrorBelow from '../ErrorBelow';
 
 const RED = 'red';
 
@@ -41,18 +41,14 @@ const TitledInput = ({
 				  showError
 				    ? { borderWidth: 1.2, borderColor: err.err ? RED : SUCCESS_TEXT }
 				    : null,
-				  showError && { backgroundColor: WHITE },
+				  config.value && { backgroundColor: '#fbfbfb' },
         ]}
         {...config}
         onFocus={() => {
 				  if (context) context.toggleMode(mode, ipRef);
         }}
       />
-      {showError ? (
-        <MyText style={[styles.alert, { color: err.err ? RED : SUCCESS_TEXT }]}>
-          {err.value}
-        </MyText>
-      ) : null}
+      <ErrorBelow err={err} showError={showError} />
     </View>
   );
 };
@@ -86,13 +82,6 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif',
     color: '#2b2d38',
     marginBottom: 8,
-  },
-
-  alert: {
-    marginTop: 2,
-    fontSize: 11.5,
-    position: 'absolute',
-    bottom: 0,
   },
 
   alertText: {
