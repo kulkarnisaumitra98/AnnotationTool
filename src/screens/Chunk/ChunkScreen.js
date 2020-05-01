@@ -8,35 +8,43 @@ import UserContext from '../../contexts/UserContext';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
 import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
-import Title from '../Common/Title';
 import { sendAlert } from '../Common/Utils/alert';
 import { axiosPost } from '../Common/Utils/axiosConfig';
 import { useFetch } from '../Common/Utils/useFetch';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
+import Nav from './Nav';
 import { getSelectedCorpus } from './Utils/corpusProcessing';
 import { getNextOperation, getOperationName, operationToWord } from './Utils/general';
-import getInitialWord from './Utils/getInitialWord';
+import { getInitialWord } from './Utils/getInitialWord';
 
 axios.defaults.withCredentials = true;
 
 const ChunkScreen = () => {
-  const { data, loading } = useFetch(
+  const corpora = useFetch(
     'get_corpora/',
     { page: 1 },
     (_data) => JSON.parse(_data.corpora),
   );
 
+  const userCorpora = useFetch(
+    'get_user_corpora/',
+    { page: 1 },
+    (_data) => JSON.parse(_data.corpora),
+  );
+
+
   const { user } = useContext(UserContext);
 
   // const [page, setPage] = useState(1);
 
+  const [data, setData] = useState(null);
   const [currentChunk, setCurrentChunk] = useState({
     index: null,
     chunk: null,
   });
-
   const [modalVisible, setModalVisible] = useState(false);
+  const [corporaToggle, setCorporaToggle] = useState(false);
   const [addEntry, setAddEntry] = useState(false);
 
   const initialState = {
@@ -45,7 +53,7 @@ const ChunkScreen = () => {
     gender: 0,
   };
 
-  const [wordData, setData] = useState(initialState);
+  const [wordData, setWordData] = useState(initialState);
   const [operation, setOperation] = useState(0);
 
   useEffect(() => {
@@ -74,7 +82,6 @@ const ChunkScreen = () => {
 
   useEffect(() => {
     if (currentChunk.index !== null) {
-      setData(initialState); // Should bw able to add async await here, read later about async useffect hook
       setCurrentChunk({
         index: currentChunk.index,
         chunk: getSelectedCorpus(
@@ -86,10 +93,22 @@ const ChunkScreen = () => {
     }
   }, [currentChunk.index]);
 
+  useEffect(() => {
+    if (corpora.data) { setData(corpora.data); }
+  }, [corpora.data]);
+
+  useEffect(() => {
+    if (corporaToggle) { setData(userCorpora.data); } else { setData(corpora.data); }
+  }, [corporaToggle]);
+
+  useEffect(() => {
+    console.log(userCorpora.data);
+  }, [userCorpora.data]);
+
   const handleWordPress = (value, offset, index) => () => {
     if (operation === 2) return;
 
-    setData((prevData) => ({
+    setWordData((prevData) => ({
       ...prevData,
       [operationToWord(operation)]: {
         ...prevData[operationToWord(operation)],
@@ -124,20 +143,21 @@ const ChunkScreen = () => {
 
   return (
     <FlexedContainer>
-      {!loading ? (
+      {!corpora.loading ? (
         <>
-          <Title title="Chunks" />
+          <Nav completedChunks={() => setCorporaToggle(true)} />
           <ChunksList
             data={data}
             setIndex={setCurrentChunk}
             modelToggle={setModalVisible}
+            corporaToggle={corporaToggle}
           />
           {currentChunk.index !== null ? (
             <ChunkSelectionModal
               visible={modalVisible}
               data={wordData}
               chunk={currentChunk.chunk}
-              setData={setData}
+              setData={setWordData}
               closeModal={() => setModalVisible(false)}
               addEntry={addEntry}
               handleAddEntry={dataToServer}

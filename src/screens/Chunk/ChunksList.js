@@ -14,14 +14,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const ChunksList = ({ data, setIndex, modelToggle }) => {
+const ChunksList = ({
+  data, setIndex, modelToggle, corporaToggle,
+}) => {
   const Row = ({ fields, index }) => {
-    const chunk = getListItemCorpus({ fontSize: 20, marginRight: 6 }, fields);
+    const chunk = getListItemCorpus(
+      { fontSize: 20, marginRight: 6 },
+      fields,
+      corporaToggle,
+    );
     return (
       <TouchableOpacity
         onPress={() => {
-          setIndex((prevData) => ({ ...prevData, index }));
-          modelToggle(true);
+				  setIndex((prevData) => ({ ...prevData, index }));
+				  modelToggle(true);
         }}
         style={styles.row}
       >
@@ -37,7 +43,9 @@ const ChunksList = ({ data, setIndex, modelToggle }) => {
       style={marginStyles.mb_16}
 			// data={data.slice(0, page * 12)}
       data={data}
-      renderItem={({ item, index }) => <Row fields={item.fields} index={index} />}
+      renderItem={({ item, index }) => (
+        <Row fields={item.fields} index={index} />
+      )}
       keyExtractor={(item) => item.pk.toString()}
     />
   );

@@ -3,9 +3,12 @@ import React from 'react';
 import { Text } from 'react-native';
 
 
-export const getListItemCorpus = (textStyle, fields) => {
+export const getListItemCorpus = (textStyle, fields, completed) => {
   let index = 0;
-  const { corpus, pronoun_off_start } = fields;
+  const {
+    corpus,
+    pronoun_off_start,
+  } = fields;
 
   const texts = corpus.split(' ').map((item, i) => {
     if (index === pronoun_off_start) {
@@ -18,12 +21,38 @@ export const getListItemCorpus = (textStyle, fields) => {
       );
     }
 
+    if (completed) {
+      const { correct_noun_off_start, mislead_noun_off_start } = fields;
+
+      index += item.length + 1;
+
+      if (index === correct_noun_off_start) {
+        return (
+          <Text key={index} style={textStyle}>
+            {item}
+          </Text>
+        );
+      }
+      if (index === mislead_noun_off_start) {
+        return (
+          <Text key={index} style={textStyle}>
+            {item}
+          </Text>
+        );
+      }
+
+      return (
+        <Text key={index} style={textStyle}>
+          {item}
+        </Text>
+      );
+    }
+
     index += item.length + 1;
 
     return (
       <Text key={index} style={textStyle}>
         {item}
-        {/* {' '} */}
       </Text>
     );
   });

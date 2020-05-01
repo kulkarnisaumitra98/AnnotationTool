@@ -4,7 +4,7 @@ import Button from '../../reusables/components/Button/Button';
 import RowContainer from '../../reusables/components/Containers/RowContainer';
 import { BagError, BagSuccess, TEXT_BLACK } from '../../reusables/styles/colors';
 import { paddingStyles } from '../../reusables/styles/style';
-import getInitialWord from './Utils/getInitialWord';
+import { getInitialWord } from './Utils/getInitialWord';
 
 const Table = ({
   data, setData,
