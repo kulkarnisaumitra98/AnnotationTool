@@ -4,10 +4,12 @@ import RowContainer from '../../reusables/components/Containers/RowContainer';
 import { dimensionStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
 
-const Nav = ({ completedChunks }) => (
+const Nav = ({ setCorporaToggle }) => (
   <RowContainer contStyle={dimensionStyles.w_100}>
-    <Title title="Chunks" />
-    <TouchableOpacity onPress={completedChunks}>
+    <TouchableOpacity onPress={() => setCorporaToggle(false)}>
+      <Title title="Chunks" />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => setCorporaToggle(true)}>
       <Text>Completed Chunks</Text>
     </TouchableOpacity>
   </RowContainer>

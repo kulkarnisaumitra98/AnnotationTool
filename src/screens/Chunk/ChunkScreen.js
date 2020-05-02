@@ -39,10 +39,11 @@ const ChunkScreen = () => {
   // const [page, setPage] = useState(1);
 
   const [data, setData] = useState(null);
-  const [currentChunk, setCurrentChunk] = useState({
+  const initialChunk = {
     index: null,
     chunk: null,
-  });
+  };
+  const [currentChunk, setCurrentChunk] = useState(initialChunk);
   const [modalVisible, setModalVisible] = useState(false);
   const [corporaToggle, setCorporaToggle] = useState(false);
   const [addEntry, setAddEntry] = useState(false);
@@ -82,45 +83,47 @@ const ChunkScreen = () => {
   }, [wordData, operation, addEntry]);
 
   useEffect(() => {
-    if (corporaToggle) {
-      const {
-        correct_noun,
-        correct_noun_off_start,
-        correct_noun_index,
-        mislead_noun,
-        mislead_noun_off_start,
-        mislead_noun_index,
-        gender,
-      } = data[currentChunk.index].fields;
-      setWordData({
-        A: getWordData(
+    if (currentChunk.index !== null) {
+      if (corporaToggle) {
+        const {
           correct_noun,
-          `${correct_noun_off_start}, ${
-            correct_noun_off_start + correct_noun.length - 1
-          }`,
+          correct_noun_off_start,
           correct_noun_index,
-          BagSuccess,
-        ),
-        B: getWordData(
           mislead_noun,
-          `${mislead_noun_off_start}, ${
-            mislead_noun_off_start + mislead_noun.length - 1
-          }`,
+          mislead_noun_off_start,
           mislead_noun_index,
-          BagError,
-        ),
-        gender: gender + 1,
-      });
-    } else if (currentChunk.index !== null) {
-      setWordData(initialState);
-      setCurrentChunk({
-        index: currentChunk.index,
-        chunk: getSelectedCorpus(
-          { fontSize: 24, marginRight: 6 },
-          data[currentChunk.index].fields,
-          handleWordPress,
-        ),
-      });
+          gender,
+        } = data[currentChunk.index].fields;
+        setWordData({
+          A: getWordData(
+            correct_noun,
+            `${correct_noun_off_start}, ${
+              correct_noun_off_start + correct_noun.length - 1
+            }`,
+            correct_noun_index,
+            BagSuccess,
+          ),
+          B: getWordData(
+            mislead_noun,
+            `${mislead_noun_off_start}, ${
+              mislead_noun_off_start + mislead_noun.length - 1
+            }`,
+            mislead_noun_index,
+            BagError,
+          ),
+          gender: gender + 1,
+        });
+      } else {
+        setWordData(initialState);
+        setCurrentChunk({
+          index: currentChunk.index,
+          chunk: getSelectedCorpus(
+            { fontSize: 24, marginRight: 6 },
+            data[currentChunk.index].fields,
+            handleWordPress,
+          ),
+        });
+      }
     }
   }, [currentChunk.index]);
 
@@ -130,6 +133,7 @@ const ChunkScreen = () => {
 
   useEffect(() => {
     if (corporaToggle) { setData(userCorpora.data); } else { setData(corpora.data); }
+    setCurrentChunk(initialChunk);
   }, [corporaToggle]);
 
   const handleWordPress = (value, offset, index) => () => {
@@ -174,7 +178,7 @@ const ChunkScreen = () => {
     <FlexedContainer>
       {!corpora.loading ? (
         <>
-          <Nav completedChunks={() => setCorporaToggle(true)} />
+          <Nav setCorporaToggle={setCorporaToggle} />
           <ChunksList
             data={data}
             setIndex={setCurrentChunk}
