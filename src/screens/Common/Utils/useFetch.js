@@ -2,7 +2,12 @@
 import { useEffect, useState } from 'react';
 import { axiosGet } from './axiosConfig';
 
-export const useFetch = (url, params, processData = (data) => data) => {
+export const useFetch = (
+  url,
+  params,
+  processData = (data) => data,
+  corporaToggle,
+) => {
   const [state, setstate] = useState({ data: null, loading: true });
 
   useEffect(() => {
