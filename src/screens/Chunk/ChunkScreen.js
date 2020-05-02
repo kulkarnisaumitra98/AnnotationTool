@@ -16,7 +16,7 @@ import ChunksList from './ChunksList';
 import Nav from './Nav';
 import { getSelectedCorpus } from './Utils/corpusProcessing';
 import { getNextOperation, getOperationName, operationToWord } from './Utils/general';
-import { getInitialWord } from './Utils/getInitialWord';
+import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
 axios.defaults.withCredentials = true;
 
@@ -75,13 +75,44 @@ const ChunkScreen = () => {
           data[currentChunk.index].fields,
           addEntry ? () => {} : handleWordPress,
           wordData,
+          corporaToggle,
         ),
       });
     }
   }, [wordData, operation, addEntry]);
 
   useEffect(() => {
-    if (currentChunk.index !== null) {
+    if (corporaToggle) {
+      const {
+        correct_noun,
+        correct_noun_off_start,
+        correct_noun_index,
+        mislead_noun,
+        mislead_noun_off_start,
+        mislead_noun_index,
+        gender,
+      } = data[currentChunk.index].fields;
+      setWordData({
+        A: getWordData(
+          correct_noun,
+          `${correct_noun_off_start}, ${
+            correct_noun_off_start + correct_noun.length - 1
+          }`,
+          correct_noun_index,
+          BagSuccess,
+        ),
+        B: getWordData(
+          mislead_noun,
+          `${mislead_noun_off_start}, ${
+            mislead_noun_off_start + mislead_noun.length - 1
+          }`,
+          mislead_noun_index,
+          BagError,
+        ),
+        gender: gender + 1,
+      });
+    } else if (currentChunk.index !== null) {
+      setWordData(initialState);
       setCurrentChunk({
         index: currentChunk.index,
         chunk: getSelectedCorpus(
@@ -100,10 +131,6 @@ const ChunkScreen = () => {
   useEffect(() => {
     if (corporaToggle) { setData(userCorpora.data); } else { setData(corpora.data); }
   }, [corporaToggle]);
-
-  useEffect(() => {
-    console.log(userCorpora.data);
-  }, [userCorpora.data]);
 
   const handleWordPress = (value, offset, index) => () => {
     if (operation === 2) return;

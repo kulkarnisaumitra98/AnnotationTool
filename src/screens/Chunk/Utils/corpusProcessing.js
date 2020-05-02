@@ -1,14 +1,21 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable camelcase */
 import React from 'react';
 import { Text } from 'react-native';
+import { BagError, BagSuccess } from '../../../reusables/styles/colors';
 
 
 export const getListItemCorpus = (textStyle, fields, completed) => {
   let index = 0;
-  const {
+  let {
     corpus,
     pronoun_off_start,
   } = fields;
+
+  if (Array.isArray(corpus)) {
+    pronoun_off_start = corpus[1];
+    corpus = corpus[0];
+  }
 
   const texts = corpus.split(' ').map((item, i) => {
     if (index === pronoun_off_start) {
@@ -24,22 +31,33 @@ export const getListItemCorpus = (textStyle, fields, completed) => {
     if (completed) {
       const { correct_noun_off_start, mislead_noun_off_start } = fields;
 
-      index += item.length + 1;
-
       if (index === correct_noun_off_start) {
+        index += item.length + 1;
+
         return (
-          <Text key={index} style={textStyle}>
+          <Text
+            key={index}
+            style={[textStyle, { backgroundColor: BagSuccess }]}
+          >
             {item}
           </Text>
         );
       }
       if (index === mislead_noun_off_start) {
+        index += item.length + 1;
+
         return (
-          <Text key={index} style={textStyle}>
+          <Text
+            key={index}
+            style={[textStyle, { backgroundColor: BagError }]}
+          >
             {item}
           </Text>
         );
       }
+
+      index += item.length + 1;
+
 
       return (
         <Text key={index} style={textStyle}>
@@ -61,9 +79,14 @@ export const getListItemCorpus = (textStyle, fields, completed) => {
 };
 
 
-export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
+export const getSelectedCorpus = (textStyle, fields, setWord, words, completed) => {
   let index = 0;
-  const { corpus, pronoun_off_start } = fields;
+  let { corpus, pronoun_off_start } = fields;
+
+  if (completed) {
+    pronoun_off_start = corpus[1];
+    corpus = corpus[0];
+  }
 
   const texts = corpus.split(' ').map((item, i) => {
     if (index === pronoun_off_start) {
@@ -76,12 +99,12 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
       );
     }
 
-    index += item.length + 1;
-
     if (words) {
       const wordKeys = Object.keys(words);
       for (let j = 0; j < wordKeys.length; j += 1) {
         if (words[wordKeys[j]].index === i) {
+          index += item.length + 1;
+
           return (
             <Text key={index} style={[textStyle, { backgroundColor: words[wordKeys[j]].color }]}>
               {item}
@@ -91,6 +114,8 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words) => {
         }
       }
     }
+
+    index += item.length + 1;
 
     return (
       <Text
