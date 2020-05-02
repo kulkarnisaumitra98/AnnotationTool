@@ -42,6 +42,7 @@ const ChunkScreen = () => {
   const initialChunk = {
     index: null,
     chunk: null,
+    updated: false,
   };
   const [currentChunk, setCurrentChunk] = useState(initialChunk);
   const [modalVisible, setModalVisible] = useState(false);
@@ -69,7 +70,8 @@ const ChunkScreen = () => {
       setAddEntry(false);
     }
     if (currentChunk.index !== null) {
-      setCurrentChunk({
+      setCurrentChunk((prevData) => ({
+        ...prevData,
         index: currentChunk.index,
         chunk: getSelectedCorpus(
           { fontSize: 24, marginRight: 6 },
@@ -78,7 +80,7 @@ const ChunkScreen = () => {
           wordData,
           corporaToggle,
         ),
-      });
+      }));
     }
   }, [wordData, operation, addEntry]);
 
@@ -115,14 +117,16 @@ const ChunkScreen = () => {
         });
       } else {
         setWordData(initialState);
-        setCurrentChunk({
+
+        setCurrentChunk((prevData) => ({
+          ...prevData,
           index: currentChunk.index,
           chunk: getSelectedCorpus(
             { fontSize: 24, marginRight: 6 },
             data[currentChunk.index].fields,
             handleWordPress,
           ),
-        });
+        }));
       }
     }
   }, [currentChunk.index]);
@@ -164,9 +168,13 @@ const ChunkScreen = () => {
       mislead_noun_off_end: endB,
       mislead_noun_index: wordData.B.index,
       gender: parseInt(wordData.gender) - 1,
-      corpus: data[currentChunk.index].pk,
+      corpus: corporaToggle
+        ? data[currentChunk.index].fields.corpus[2]
+        : data[currentChunk.index].pk,
       user: user.id,
     };
+
+    setCurrentChunk(initialChunk);
 
     const postResponse = await axiosPost('add_entry_user/', _data);
     sendAlert(postResponse.data.text, '', () => setModalVisible(false));
@@ -189,12 +197,14 @@ const ChunkScreen = () => {
             <ChunkSelectionModal
               visible={modalVisible}
               data={wordData}
-              chunk={currentChunk.chunk}
+              chunk={currentChunk}
               setData={setWordData}
               closeModal={() => setModalVisible(false)}
               addEntry={addEntry}
               handleAddEntry={dataToServer}
               operationName={getOperationName(operation)}
+              setCurrentChunk={setCurrentChunk}
+              completed={corporaToggle}
             />
           ) : null}
         </>

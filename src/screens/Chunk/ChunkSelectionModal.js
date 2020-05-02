@@ -1,6 +1,6 @@
 import Modal from 'modal-react-native-web';
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../reusables/components/Button/Button';
 import RowContainer from '../../reusables/components/Containers/RowContainer';
 import Cross from '../../reusables/components/General/Cross';
@@ -15,50 +15,70 @@ const ChunkSelectionModal = ({
   data,
   chunk,
   setData,
-  gender,
-  setGender,
   addEntry,
   handleAddEntry,
   operationName,
-}) => (
-  <Modal
-    visible={visible}
-    onRequestClose={closeModal}
-    animationType="slide"
-    transparent
-  >
-    <View style={styles.outerCont}>
-      <View style={styles.container}>
-        <Cross closeAction={closeModal} />
-        <RowContainer
-          justifyContent="space-between"
-          contStyle={[paddingStyles.p_4]}
+  setCurrentChunk,
+  completed,
+}) => {
+  useEffect(() => {
+    if (completed && chunk.chunk) {
+      console.log(chunk.updated, 'fds');
+      setCurrentChunk((prevChunk) => ({ ...prevChunk, updated: true }));
+    }
+  }, [data]);
+  return (
+    <>
+      {chunk.chunk ? (
+        <Modal
+          visible={visible}
+          onRequestClose={closeModal}
+          animationType="slide"
+          transparent
         >
-          <Title title={addEntry ? 'All Done!!' : operationName} textStyle={paddingStyles.p_0} />
-          <View style={{ flexDirection: 'row' }}>
-            <PickerContainer gender={data.gender} setGender={setData} />
-            <Button
-              disabled={!addEntry}
-              title="Add Entry"
-              handlePress={handleAddEntry}
-              containerStyle={styles.button}
-              textStyle={{ fontWeight: 'bold' }}
-            />
+          <View style={styles.outerCont}>
+            <View style={styles.container}>
+              <Cross closeAction={closeModal} />
+              <RowContainer
+                justifyContent="space-between"
+                contStyle={[paddingStyles.p_4]}
+              >
+                <Title
+                  title={addEntry ? 'Done!' : operationName}
+                  textStyle={paddingStyles.p_0}
+                />
+                <View style={{ flexDirection: 'row' }}>
+                  <PickerContainer gender={data.gender} setGender={setData} />
+                  <Button
+                    disabled={
+											((!addEntry || !chunk.updated) && completed)
+											|| (!addEntry && !completed)
+										}
+                    title={completed ? 'Update Entry' : 'Add Entry'}
+                    handlePress={handleAddEntry}
+                    containerStyle={styles.button}
+                    textStyle={{ fontWeight: 'bold' }}
+                  />
+                </View>
+              </RowContainer>
+              <ScrollView>
+                <RowContainer
+                  justifyContent="flex-start"
+                  contStyle={[borderStyles.bw_0, styles.rowCont]}
+                >
+                  {chunk.chunk}
+                </RowContainer>
+              </ScrollView>
+              <Table data={data} setData={setData} />
+            </View>
           </View>
-        </RowContainer>
-        <ScrollView>
-          <RowContainer
-            justifyContent="flex-start"
-            contStyle={[borderStyles.bw_0, styles.rowCont]}
-          >
-            {chunk}
-          </RowContainer>
-        </ScrollView>
-        <Table data={data} setData={setData} />
-      </View>
-    </View>
-  </Modal>
-);
+        </Modal>
+      ) : (
+        <ActivityIndicator />
+      )}
+    </>
+  );
+};
 const styles = StyleSheet.create({
   outerCont: {
     width: '100%',
