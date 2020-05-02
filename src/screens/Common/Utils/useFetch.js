@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { axiosGet } from './axiosConfig';
 
-export const useFetch = (url, params = {}, processData = (data) => data) => {
+export const useFetch = (url, params, processData = (data) => data) => {
   const [state, setstate] = useState({ data: null, loading: true });
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const useFetch = (url, params = {}, processData = (data) => data) => {
     };
 
     fetch();
-  }, [url]);
+  }, [url, params.page]);
 
   return state;
 };

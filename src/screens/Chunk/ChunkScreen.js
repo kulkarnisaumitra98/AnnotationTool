@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import UserContext from '../../contexts/UserContext';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
+import UnderlinedLinkText from '../../reusables/components/Texts/UnderlinedLinkText';
 import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
 import { sendAlert } from '../Common/Utils/alert';
@@ -21,22 +22,14 @@ import { getInitialWord, getWordData } from './Utils/getInitialWord';
 axios.defaults.withCredentials = true;
 
 const ChunkScreen = () => {
-  const corpora = useFetch(
-    'get_corpora/',
-    { page: 1 },
-    (_data) => JSON.parse(_data.corpora),
-  );
-
-  const userCorpora = useFetch(
-    'get_user_corpora/',
-    { page: 1 },
-    (_data) => JSON.parse(_data.corpora),
-  );
-
-
   const { user } = useContext(UserContext);
 
-  // const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
+
+  const corpora = useFetch('get_corpora/', { page }, (_data) => JSON.parse(_data.corpora));
+
+  const userCorpora = useFetch('get_user_corpora/', { page: 1 }, (_data) => JSON.parse(_data.corpora));
+
 
   const [data, setData] = useState(null);
   const initialChunk = {
@@ -207,6 +200,7 @@ const ChunkScreen = () => {
               completed={corporaToggle}
             />
           ) : null}
+          <UnderlinedLinkText text="Load More Chunks" handlePress={() => setPage((prevPage) => prevPage + 1)} />
         </>
       ) : (
         <ActivityIndicator size="small" style={marginStyles.mt_24} />

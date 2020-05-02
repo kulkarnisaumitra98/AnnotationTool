@@ -4,8 +4,9 @@ import { StyleSheet, Text } from 'react-native';
 const MyText = ({
   style,
   children,
+  onPress,
 }) => (
-  <Text style={[style, styles.text]}>
+  <Text onPress={onPress} style={[style, styles.text]}>
     {children}
   </Text>
 );
