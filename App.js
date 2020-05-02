@@ -5,14 +5,16 @@ import ScreenContext from './src/contexts/ScreenContext';
 import UserContext from './src/contexts/UserContext';
 import FlexedContainer from './src/reusables/components/Containers/FlexedContainer';
 import { WHITE } from './src/reusables/styles/colors';
-import { borderStyles, paddingStyles } from './src/reusables/styles/style';
+import { borderStyles, dimensionStyles, paddingStyles } from './src/reusables/styles/style';
 import AuthScreen from './src/screens/Auth/AuthScreen';
 import ChunkScreen from './src/screens/Chunk/ChunkScreen';
+import NavBar from './src/screens/Common/Navbar/Navbar';
 
 axios.defaults.withCredentials = true;
 
-export const AUTHSCREEN = 'AuthScreen';
-export const CHUNKSCREEN = 'CHUNKSCREEN';
+export const AUTHSCREEN = 0;
+export const CHUNKSCREEN = 2;
+export const COMPLETEDSCREEN = 1;
 
 const switchScreen = (choice) => {
   switch (choice) {
@@ -20,10 +22,12 @@ const switchScreen = (choice) => {
       return <AuthScreen />;
 
     case CHUNKSCREEN:
-      return <ChunkScreen />;
+      return <ChunkScreen screenNumber={1} />;
 
+    case COMPLETEDSCREEN:
+      return <ChunkScreen screenNumber={2} />;
     default:
-      return <AuthScreen />;
+      return <></>;
   }
 };
 
@@ -35,10 +39,11 @@ const App = () => {
     name: null,
   });
   return (
-    <ScreenContext.Provider value={{ setScreen }}>
+    <ScreenContext.Provider value={{ setScreen, screen }}>
       <UserContext.Provider value={{ user, setUser }}>
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, dimensionStyles.dw]}>
           <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
+            <NavBar screen={screen} />
             {switchScreen(screen)}
           </FlexedContainer>
         </SafeAreaView>
@@ -52,7 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: WHITE,
     marginTop: StatusBar.currentHeight,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: 'red',
   },
 });

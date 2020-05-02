@@ -165,7 +165,7 @@ export const dimensionStyles = StyleSheet.create({
   w_100: { width: '100%' },
   w_50: { width: '50%' },
   h_100: { height: '100%' },
-  dw: { width: Dimensions.get('screen').width },
+  dw: { width: Dimensions.get('window').width },
 });
 
 export const borderStyles = StyleSheet.create({

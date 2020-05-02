@@ -9,19 +9,20 @@ import FlexedContainer from '../../reusables/components/Containers/FlexedContain
 import UnderlinedLinkText from '../../reusables/components/Texts/UnderlinedLinkText';
 import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
+import useRenderCount from '../Common/useRenderCount';
 import { sendAlert } from '../Common/Utils/alert';
 import { axiosPost } from '../Common/Utils/axiosConfig';
 import { useFetch } from '../Common/Utils/useFetch';
 import ChunkSelectionModal from './ChunkSelectionModal';
 import ChunksList from './ChunksList';
-import Nav from './Nav';
 import { getSelectedCorpus } from './Utils/corpusProcessing';
-import { getNextOperation, getOperationName, operationToWord } from './Utils/general';
+import { getNextOperation, operationToWord } from './Utils/general';
 import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
 axios.defaults.withCredentials = true;
 
-const ChunkScreen = () => {
+const ChunkScreen = ({ screenNumber }) => {
+  const corporaToggle = screenNumber - 1;
   const { user } = useContext(UserContext);
 
   const [page, setPage] = useState(1);
@@ -39,8 +40,8 @@ const ChunkScreen = () => {
   };
   const [currentChunk, setCurrentChunk] = useState(initialChunk);
   const [modalVisible, setModalVisible] = useState(false);
-  const [corporaToggle, setCorporaToggle] = useState(false);
   const [addEntry, setAddEntry] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const initialState = {
     A: getInitialWord(BagSuccess),
@@ -173,18 +174,24 @@ const ChunkScreen = () => {
     sendAlert(postResponse.data.text, '', () => setModalVisible(false));
   };
 
-  // useRenderCount();
+  useRenderCount();
 
   return (
-    <FlexedContainer>
+    <FlexedContainer contStyle={marginStyles.mt_12}>
       {!corpora.loading ? (
         <>
-          <Nav setCorporaToggle={setCorporaToggle} />
+          {/* <Nav setCorporaToggle={setCorporaToggle} /> */}
           <ChunksList
             data={data}
             setIndex={setCurrentChunk}
             modelToggle={setModalVisible}
             corporaToggle={corporaToggle}
+            LoadMoreChunks={(
+              <UnderlinedLinkText
+                text="Load More Chunks"
+                handlePress={() => setPage((prevPage) => prevPage + 1)}
+              />
+              )}
           />
           {currentChunk.index !== null ? (
             <ChunkSelectionModal
@@ -195,12 +202,11 @@ const ChunkScreen = () => {
               closeModal={() => setModalVisible(false)}
               addEntry={addEntry}
               handleAddEntry={dataToServer}
-              operationName={getOperationName(operation)}
               setCurrentChunk={setCurrentChunk}
               completed={corporaToggle}
+              operation={operation}
             />
           ) : null}
-          <UnderlinedLinkText text="Load More Chunks" handlePress={() => setPage((prevPage) => prevPage + 1)} />
         </>
       ) : (
         <ActivityIndicator size="small" style={marginStyles.mt_24} />

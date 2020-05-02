@@ -8,6 +8,7 @@ import { borderStyles, paddingStyles } from '../../reusables/styles/style';
 import Title from '../Common/Title';
 import PickerContainer from './PickerContainer';
 import Table from './Table';
+import { getOperationColor, getOperationName } from './Utils/general';
 
 const ChunkSelectionModal = ({
   visible,
@@ -17,7 +18,7 @@ const ChunkSelectionModal = ({
   setData,
   addEntry,
   handleAddEntry,
-  operationName,
+  operation,
   setCurrentChunk,
   completed,
 }) => {
@@ -44,8 +45,8 @@ const ChunkSelectionModal = ({
                 contStyle={[paddingStyles.p_4]}
               >
                 <Title
-                  title={addEntry ? 'Done!' : operationName}
-                  textStyle={paddingStyles.p_0}
+                  title={addEntry ? 'Done!' : getOperationName(operation)}
+                  textStyle={[paddingStyles.p_0, { color: getOperationColor(operation) }]}
                 />
                 <View style={{ flexDirection: 'row' }}>
                   <PickerContainer gender={data.gender} setGender={setData} />
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
 
   rowCont: {
     flexWrap: 'wrap',
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 8,
     padding: 8,
     paddingTop: 0,

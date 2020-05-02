@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: 'blue',
     backgroundColor: '#fff',
-    overflow: 'hidden',
+    position: 'relative',
+    // overflow: 'hidden',
   },
 });
 

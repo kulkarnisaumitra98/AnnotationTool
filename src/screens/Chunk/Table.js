@@ -99,7 +99,7 @@ const Table = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    borderWidth: 1,
+    borderWidth: 0,
     marginBottom: 16,
     marginTop: 'auto',
     padding: 0,
@@ -107,14 +107,25 @@ const styles = StyleSheet.create({
   },
 
   wordCont: {
-    width: '50%',
-    borderRightWidth: 1,
-    // borderRadius: 8,
+    width: '48%',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#ddd',
+    padding: 4,
+
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 
   textStyle: {
     // fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
     color: TEXT_BLACK,
     margin: 8,
   },

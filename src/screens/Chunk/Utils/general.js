@@ -1,3 +1,5 @@
+import { BLUE_BUTTON, TEXT_BLACK } from '../../../reusables/styles/colors';
+
 const TASKS = 3;
 
 export const operationToWord = (operation) => {
@@ -35,5 +37,20 @@ export const getOperationName = (operation) => {
       return 'Select Gender';
     default:
       return 'Error';
+  }
+};
+
+export const getOperationColor = (operation) => {
+  switch (operation) {
+    case 0:
+      return 'green';
+    case 1:
+      return 'red';
+    case 2:
+      return BLUE_BUTTON;
+    case 3:
+      return 'green';
+    default:
+      return TEXT_BLACK;
   }
 };
