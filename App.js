@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import ScreenContext from './src/contexts/ScreenContext';
 import UserContext from './src/contexts/UserContext';
-import FlexedContainer from './src/reusables/components/Containers/FlexedContainer';
 import { WHITE } from './src/reusables/styles/colors';
-import { borderStyles, dimensionStyles, paddingStyles } from './src/reusables/styles/style';
+import { dimensionStyles } from './src/reusables/styles/style';
+import Routes from './src/Routes';
 import AuthScreen from './src/screens/Auth/AuthScreen';
 import ChunkScreen from './src/screens/Chunk/ChunkScreen';
-import NavBar from './src/screens/Common/Navbar/Navbar';
 
 axios.defaults.withCredentials = true;
 
@@ -42,10 +41,11 @@ const App = () => {
     <ScreenContext.Provider value={{ setScreen, screen }}>
       <UserContext.Provider value={{ user, setUser }}>
         <SafeAreaView style={[styles.container, dimensionStyles.dw]}>
-          <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
+          {/* <FlexedContainer contStyle={(borderStyles.bw_0, paddingStyles.p_0)}>
             <NavBar screen={screen} />
             {switchScreen(screen)}
-          </FlexedContainer>
+          </FlexedContainer> */}
+          <Routes />
         </SafeAreaView>
       </UserContext.Provider>
     </ScreenContext.Provider>

@@ -1,6 +1,4 @@
-import { BLUE_BUTTON, TEXT_BLACK } from '../../../reusables/styles/colors';
-
-const TASKS = 3;
+import { BLUE_BUTTON, TEXT_BLACK } from '../../../../reusables/styles/colors';
 
 export const operationToWord = (operation) => {
   switch (operation) {

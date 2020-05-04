@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import RowContainer from '../../reusables/components/Containers/RowContainer';
-import { dimensionStyles, marginStyles } from '../../reusables/styles/style';
+import RowContainer from '../../../reusables/components/Containers/RowContainer';
+import { dimensionStyles, marginStyles } from '../../../reusables/styles/style';
 import { getListItemCorpus } from './Utils/corpusProcessing';
 
 const styles = StyleSheet.create({

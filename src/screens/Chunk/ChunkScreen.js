@@ -9,15 +9,14 @@ import FlexedContainer from '../../reusables/components/Containers/FlexedContain
 import UnderlinedLinkText from '../../reusables/components/Texts/UnderlinedLinkText';
 import { BagError, BagSuccess } from '../../reusables/styles/colors';
 import { marginStyles } from '../../reusables/styles/style';
-import useRenderCount from '../Common/useRenderCount';
+import ChunkSelectionModal from '../Common/ChunkRelated/ChunkSelectionModal';
+import ChunksList from '../Common/ChunkRelated/ChunksList';
+import { getSelectedCorpus } from '../Common/ChunkRelated/Utils/corpusProcessing';
+import { getNextOperation, operationToWord } from '../Common/ChunkRelated/Utils/general';
+import { getInitialWord, getWordData } from '../Common/ChunkRelated/Utils/getInitialWord';
 import { sendAlert } from '../Common/Utils/alert';
 import { axiosPost } from '../Common/Utils/axiosConfig';
 import { useFetch } from '../Common/Utils/useFetch';
-import ChunkSelectionModal from './ChunkSelectionModal';
-import ChunksList from './ChunksList';
-import { getSelectedCorpus } from './Utils/corpusProcessing';
-import { getNextOperation, operationToWord } from './Utils/general';
-import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
 axios.defaults.withCredentials = true;
 
@@ -174,7 +173,7 @@ const ChunkScreen = ({ screenNumber }) => {
     sendAlert(postResponse.data.text, '', () => setModalVisible(false));
   };
 
-  useRenderCount();
+  // useRenderCount();
 
   return (
     <FlexedContainer contStyle={marginStyles.mt_12}>

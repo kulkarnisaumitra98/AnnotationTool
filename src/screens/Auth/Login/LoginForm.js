@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
-import React, { useContext, useState } from 'react';
+import { withNavigation } from '@react-navigation/compat';
+import React, { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { CHUNKSCREEN } from '../../../../App';
 import ScreenContext from '../../../contexts/ScreenContext';
 import UserContext from '../../../contexts/UserContext';
 import Button from '../../../reusables/components/Button/Button';
@@ -12,7 +12,7 @@ import { axiosPost } from '../../Common/Utils/axiosConfig';
 
 const PLACEHOLDERCOLOR = '#888';
 
-const LoginForm = () => {
+const LoginForm = ({ navigation }) => {
   const context = useContext(ScreenContext);
   const userContext = useContext(UserContext);
 
@@ -23,6 +23,12 @@ const LoginForm = () => {
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (userContext.user.username) {
+      navigation.navigate('Tabs');
+    }
+  }, [userContext.user]);
 
   const handleTextChange = (field, value) => {
     const newFields = { ...fields };
@@ -54,7 +60,6 @@ const LoginForm = () => {
       userContext.setUser({
         ...data,
       });
-      context.setScreen(CHUNKSCREEN);
     } else {
       setError(err);
     }
@@ -114,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginForm;
+export default withNavigation(LoginForm);

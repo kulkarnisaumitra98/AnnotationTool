@@ -1,11 +1,11 @@
 import Modal from 'modal-react-native-web';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
-import Button from '../../reusables/components/Button/Button';
-import RowContainer from '../../reusables/components/Containers/RowContainer';
-import Cross from '../../reusables/components/General/Cross';
-import { borderStyles, paddingStyles } from '../../reusables/styles/style';
-import Title from '../Common/Title';
+import Button from '../../../reusables/components/Button/Button';
+import RowContainer from '../../../reusables/components/Containers/RowContainer';
+import Cross from '../../../reusables/components/General/Cross';
+import { borderStyles, paddingStyles } from '../../../reusables/styles/style';
+import Title from '../Title';
 import PickerContainer from './PickerContainer';
 import Table from './Table';
 import { getOperationColor, getOperationName } from './Utils/general';

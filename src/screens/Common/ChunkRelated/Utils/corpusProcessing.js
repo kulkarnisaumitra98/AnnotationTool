@@ -2,8 +2,7 @@
 /* eslint-disable camelcase */
 import React from 'react';
 import { Text } from 'react-native';
-import { BagError, BagSuccess } from '../../../reusables/styles/colors';
-
+import { BagError, BagSuccess } from '../../../../reusables/styles/colors';
 
 export const getListItemCorpus = (textStyle, fields, completed) => {
   let index = 0;
