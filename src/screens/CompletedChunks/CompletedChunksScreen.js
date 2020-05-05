@@ -13,7 +13,7 @@ import useChunk from '../Common/ChunkRelated/useChunk';
 
 axios.defaults.withCredentials = true;
 
-const CompletedChunksScreen = () => {
+const CompletedChunksScreen = ({ navigation }) => {
   const {
     data,
     loading,
@@ -27,7 +27,7 @@ const CompletedChunksScreen = () => {
     setWordData,
     operation,
     dataToServer,
-  } = useChunk(true);
+  } = useChunk(true, navigation);
 
   // useRenderCount();
 

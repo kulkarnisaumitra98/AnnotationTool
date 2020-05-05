@@ -10,14 +10,16 @@ import { getSelectedCorpus } from './Utils/corpusProcessing';
 import { getNextOperation, operationToWord } from './Utils/general';
 import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
-const useChunk = (completed) => {
+const useChunk = (completed, navigation) => {
   const [page, setPage] = useState(1);
   const { user } = useContext(UserContext);
+  const [reload, setReload] = useState(true);
 
   const { data, loading, err } = useFetch(
     !completed ? 'get_corpora/' : 'get_user_corpora/',
     { page },
     (_data) => JSON.parse(_data.corpora),
+    reload,
   );
 
   const initialChunk = {
@@ -38,6 +40,13 @@ const useChunk = (completed) => {
   const [wordData, setWordData] = useState(initialState);
   const [operation, setOperation] = useState(0);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setReload((prevReload) => !prevReload);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     const operationNumber = getNextOperation(wordData);
@@ -112,7 +121,6 @@ const useChunk = (completed) => {
     }
   }, [currentChunk.index]);
 
-
   const handleWordPress = (value, offset, index) => () => {
     if (operation === 2) return;
 
@@ -154,6 +162,7 @@ const useChunk = (completed) => {
     setCurrentChunk(initialChunk);
 
     const postResponse = await axiosPost('add_entry_user/', _data);
+    setReload((prevReload) => !prevReload);
     sendAlert(postResponse.data.text, '', () => setModalVisible(false));
   };
 
@@ -175,6 +184,7 @@ const useChunk = (completed) => {
     operation,
     setOperation,
     dataToServer,
+    setReload,
   };
 };
 

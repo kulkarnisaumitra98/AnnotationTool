@@ -83,11 +83,11 @@ const Routes = () => {
           navigate('Completed');
           // navigate('Tabs', { screen: 'Completed' });
           break;
+        // case 2:
+        //   navigate('Leaderboard');
+        //   // navigate('Tabs', { screen: 'Leaderboard' });
+        //   break;
         case 2:
-          navigate('Leaderboard');
-          // navigate('Tabs', { screen: 'Leaderboard' });
-          break;
-        case 3:
           AsyncStorage.removeItem('user').then(() => {
             sendAlert('Logged Out');
             navigate('Auth');

@@ -15,7 +15,7 @@ import { sendAlert } from '../Common/Utils/alert';
 
 axios.defaults.withCredentials = true;
 
-const ChunkScreen = () => {
+const ChunkScreen = ({ navigation }) => {
   const {
     err,
     data,
@@ -30,7 +30,7 @@ const ChunkScreen = () => {
     setWordData,
     operation,
     dataToServer,
-  } = useChunk(false);
+  } = useChunk(false, navigation);
 
   // useRenderCount();
 

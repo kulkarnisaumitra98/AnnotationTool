@@ -8,7 +8,7 @@ const NavBar = () => (
       optionArr={[
 			  { title: 'Chunks' },
 			  { title: 'Completed' },
-			  { title: 'Leaderboard' },
+			  // { title: 'Leaderboard' },
 			  { title: 'Logout' },
       ]}
       index={0}
