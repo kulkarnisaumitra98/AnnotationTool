@@ -9,6 +9,7 @@ const NavBar = () => (
 			  { title: 'Chunks' },
 			  { title: 'Completed' },
 			  { title: 'Leaderboard' },
+			  { title: 'Logout' },
       ]}
       index={0}
     />

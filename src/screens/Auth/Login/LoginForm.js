@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 
 import { withNavigation } from '@react-navigation/compat';
-import React, { useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { ActivityIndicator, AsyncStorage, StyleSheet, View } from 'react-native';
 import UserContext from '../../../contexts/UserContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
@@ -22,11 +22,11 @@ const LoginForm = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (userContext.user.username) {
-      navigation.navigate('Tabs');
-    }
-  }, [userContext.user]);
+  // useEffect(() => {
+  //   if (userContext.user) {
+  //     navigation.navigate('Tabs');
+  //   }
+  // }, [userContext.user]);
 
   const handleTextChange = (field, value) => {
     const newFields = { ...fields };
@@ -52,12 +52,16 @@ const LoginForm = ({ navigation }) => {
 
     setLoading(false);
 
-    console.log(data, status);
+    // console.log(data, status);
 
     if (status === 200) {
       userContext.setUser({
         ...data,
       });
+      navigation.navigate('Tabs');
+
+
+      AsyncStorage.setItem('user', JSON.stringify(data));
     } else {
       setError(err);
     }

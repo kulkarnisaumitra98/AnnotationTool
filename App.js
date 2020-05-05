@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import ScreenContext from './src/contexts/ScreenContext';
@@ -7,16 +6,9 @@ import { WHITE } from './src/reusables/styles/colors';
 import { dimensionStyles } from './src/reusables/styles/style';
 import Routes from './src/Routes';
 
-axios.defaults.withCredentials = true;
-
 const App = () => {
   const [screen, setScreen] = useState(0);
-  const [user, setUser] = useState({
-    id: null,
-    username: null,
-    name: null,
-  });
-
+  const [user, setUser] = useState(null);
 
   return (
     <ScreenContext.Provider value={{ setScreen, screen }}>

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable radix */
 /* eslint-disable camelcase */
@@ -10,11 +11,13 @@ import { marginStyles } from '../../reusables/styles/style';
 import ChunkSelectionModal from '../Common/ChunkRelated/ChunkSelectionModal';
 import ChunksList from '../Common/ChunkRelated/ChunksList';
 import useChunk from '../Common/ChunkRelated/useChunk';
+import { sendAlert } from '../Common/Utils/alert';
 
 axios.defaults.withCredentials = true;
 
 const ChunkScreen = () => {
   const {
+    err,
     data,
     loading,
     setPage,
@@ -33,7 +36,7 @@ const ChunkScreen = () => {
 
   return (
     <FlexedContainer contStyle={marginStyles.mt_12}>
-      {!loading ? (
+      {!loading ? !err ? (
         <>
           <ChunksList
             data={data}
@@ -62,7 +65,7 @@ const ChunkScreen = () => {
             />
           ) : null}
         </>
-      ) : (
+      ) : <>{sendAlert(err)}</> : (
         <ActivityIndicator size="small" style={marginStyles.mt_24} />
       )}
     </FlexedContainer>

@@ -1,6 +1,6 @@
 import { withNavigation } from '@react-navigation/compat';
-import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { AsyncStorage, StyleSheet, View } from 'react-native';
 import UserContext from '../../../contexts/UserContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
@@ -32,12 +32,6 @@ const SignupForm = ({ navigation }) => {
     setFields(newFields);
   };
 
-  useEffect(() => {
-    if (userContext.user.username) {
-      navigation.navigate('Tabs');
-    }
-  }, [userContext.user]);
-
   const handlePress = async () => {
     let flag = false;
     const newFields = await validate('all', '', fields, true);
@@ -59,6 +53,9 @@ const SignupForm = ({ navigation }) => {
         userContext.setUser({
           ...data,
         });
+        navigation.navigate('Tabs');
+
+        AsyncStorage.setItem('user', JSON.stringify(data));
       } else {
         sendAlert('Some error occured');
       }

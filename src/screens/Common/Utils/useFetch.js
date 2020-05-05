@@ -6,16 +6,15 @@ export const useFetch = (
   url,
   params,
   processData = (data) => data,
-  corporaToggle,
 ) => {
-  const [state, setstate] = useState({ data: null, loading: true });
+  const [state, setstate] = useState({ data: null, loading: true, err: null });
 
   useEffect(() => {
     setstate({ data: null, loading: true, err: null });
 
     const fetch = async () => {
       const { data, err } = await axiosGet(url, params);
-      setstate({ data: processData(data), err, loading: false });
+      setstate({ data: err ? null : processData(data), err, loading: false });
     };
 
     fetch();

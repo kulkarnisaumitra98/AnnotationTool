@@ -14,7 +14,7 @@ const useChunk = (completed) => {
   const [page, setPage] = useState(1);
   const { user } = useContext(UserContext);
 
-  const { data, loading } = useFetch(
+  const { data, loading, err } = useFetch(
     !completed ? 'get_corpora/' : 'get_user_corpora/',
     { page },
     (_data) => JSON.parse(_data.corpora),
@@ -160,6 +160,7 @@ const useChunk = (completed) => {
 
   return {
     data,
+    err,
     loading,
     page,
     setPage,
