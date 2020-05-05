@@ -3,7 +3,6 @@
 import { withNavigation } from '@react-navigation/compat';
 import React, { useContext, useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import ScreenContext from '../../../contexts/ScreenContext';
 import UserContext from '../../../contexts/UserContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
@@ -13,7 +12,6 @@ import { axiosPost } from '../../Common/Utils/axiosConfig';
 const PLACEHOLDERCOLOR = '#888';
 
 const LoginForm = ({ navigation }) => {
-  const context = useContext(ScreenContext);
   const userContext = useContext(UserContext);
 
   const [fields, setFields] = useState({

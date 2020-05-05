@@ -13,7 +13,7 @@ import useChunk from '../Common/ChunkRelated/useChunk';
 
 axios.defaults.withCredentials = true;
 
-const CompletedChunksScreen = ({ screenNumber }) => {
+const CompletedChunksScreen = () => {
   const {
     data,
     loading,

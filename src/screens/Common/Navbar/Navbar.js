@@ -2,13 +2,13 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import NavbarOptions from './NavbarOptions';
 
-const NavBar = ({ screen }) => (
+const NavBar = () => (
   <View style={styles.container}>
     <NavbarOptions
       optionArr={[
-			  { title: 'Leaderboard' },
-			  { title: 'Completed' },
 			  { title: 'Chunks' },
+			  { title: 'Completed' },
+			  { title: 'Leaderboard' },
       ]}
       index={0}
     />

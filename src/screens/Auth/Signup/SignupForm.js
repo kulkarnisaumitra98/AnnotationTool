@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react';
+import { withNavigation } from '@react-navigation/compat';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { CHUNKSCREEN } from '../../../../App';
-import ScreenContext from '../../../contexts/ScreenContext';
+import UserContext from '../../../contexts/UserContext';
 import Button from '../../../reusables/components/Button/Button';
 import TitledInput from '../../../reusables/components/Inputs/TitledInput/TitledInput';
 import { sendAlert } from '../../Common/Utils/alert';
@@ -16,8 +16,8 @@ const getInputConfig = () => ({
   typed: false,
 });
 
-const SignupForm = () => {
-  const context = useContext(ScreenContext);
+const SignupForm = ({ navigation }) => {
+  const userContext = useContext(UserContext);
 
   const [fields, setFields] = useState({
     name: getInputConfig(),
@@ -31,6 +31,12 @@ const SignupForm = () => {
 
     setFields(newFields);
   };
+
+  useEffect(() => {
+    if (userContext.user.username) {
+      navigation.navigate('Tabs');
+    }
+  }, [userContext.user]);
 
   const handlePress = async () => {
     let flag = false;
@@ -50,7 +56,9 @@ const SignupForm = () => {
       const { data, err, status } = await axiosPost('register/', _data);
 
       if (status === 200) {
-        context.setScreen(CHUNKSCREEN);
+        userContext.setUser({
+          ...data,
+        });
       } else {
         sendAlert('Some error occured');
       }
@@ -126,4 +134,4 @@ const styles = StyleSheet.create({
   container: {},
 });
 
-export default SignupForm;
+export default withNavigation(SignupForm);

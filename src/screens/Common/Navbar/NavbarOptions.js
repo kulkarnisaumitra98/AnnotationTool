@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import ScreenContext from '../../../contexts/ScreenContext';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import SelectHighlight from '../../../reusables/components/HOCs/SelectHighlight';
 import MyText from '../../../reusables/components/Texts/MyText';
@@ -11,24 +10,36 @@ import NavButton from './NavButton';
 const NavbarOptions = ({
   selected,
   renderComponents,
-  handlePress,
 }) => {
-  const ref = useRef(0);
-  const { setScreen, screen } = useContext(ScreenContext);
   useEffect(() => {
-    setScreen(selected);
+    // switch (selected) {
+    //   case 0:
+    //     navigate('Chunks');
+    //     break;
+    //   case 1:
+    //     navigate('Completed');
+    //     break;
+    //   case 2:
+    //     navigate('Leaderboard');
+    //     break;
+    //   default:
+    //     navigate('Auth');
+    //     break;
+    // }
+
+    console.log(selected);
   }, [selected]);
-  useEffect(() => {
-    console.log(selected, screen);
-    if (ref.current) { handlePress(screen); }
-    ref.current = 1;
-  }, [screen]);
-  return selected ? (
+
+  return (
     <View style={styles.container}>
-      <MyText style={[textStyles.header, styles.header]}>Annotation Tool</MyText>
-      <RowContainer contStyle={{ flexDirection: 'row-reverse' }}>{renderComponents(NavButton)}</RowContainer>
+      <MyText style={[textStyles.header, styles.header]}>
+        Annotation Tool
+      </MyText>
+      <RowContainer>
+        {renderComponents(NavButton)}
+      </RowContainer>
     </View>
-  ) : null;
+  );
 };
 const styles = StyleSheet.create({
   container: {

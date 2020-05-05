@@ -24,9 +24,7 @@ const TitledInput = ({
   const isFocused = useFocus(ipRef);
   const responsive = dimensionStyles.dw.width <= 400;
 
-  let context;
-
-  if (responsive) { context = useContext(KeyboardViewContext); }
+  const context = useContext(KeyboardViewContext);
 
   const showError = (config.value || typed) && err;
 
@@ -45,7 +43,7 @@ const TitledInput = ({
         ]}
         {...config}
         onFocus={() => {
-				  if (context) context.toggleMode(mode, ipRef);
+				  if (responsive) context.toggleMode(mode, ipRef);
         }}
       />
       <ErrorBelow err={err} showError={showError} />
