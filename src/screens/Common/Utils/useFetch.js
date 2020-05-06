@@ -9,15 +9,15 @@ export const useFetch = (
   processData = (data) => data,
   reload,
 ) => {
-  const [state, setstate] = useState({ data: null, loading: true, err: null });
+  const [state, setstate] = useState({ _data: null, loading: true, err: null });
 
   useDidUpdate(() => {
-    setstate({ data: null, loading: true, err: null });
+    setstate({ _data: null, loading: true, err: null });
 
     const fetch = async () => {
       // console.log(' i am', url);
       const { data, err } = await axiosGet(url, params);
-      setstate({ data: err ? null : processData(data), err, loading: false });
+      setstate({ _data: err ? null : processData(data), err, loading: false });
     };
 
     fetch();

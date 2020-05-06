@@ -6,6 +6,7 @@ import axios from 'axios';
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
+import AlertText from '../../reusables/components/Texts/AlertText';
 import UnderlinedLinkText from '../../reusables/components/Texts/UnderlinedLinkText';
 import { marginStyles } from '../../reusables/styles/style';
 import ChunkSelectionModal from '../Common/ChunkRelated/ChunkSelectionModal';
@@ -18,6 +19,7 @@ axios.defaults.withCredentials = true;
 const ChunkScreen = ({ navigation }) => {
   const {
     err,
+    end,
     data,
     loading,
     setPage,
@@ -43,12 +45,12 @@ const ChunkScreen = ({ navigation }) => {
             setIndex={setCurrentChunk}
             modelToggle={setModalVisible}
             corporaToggle={false}
-            LoadMoreChunks={(
+            LoadMoreChunks={!end ? data.length ? (
               <UnderlinedLinkText
                 text="Load More Chunks"
                 handlePress={() => setPage((prevPage) => prevPage + 1)}
               />
-              )}
+            ) : <AlertText text="No annotations, Get to work!!!" type="error" /> : null}
           />
           {currentChunk.index !== null ? (
             <ChunkSelectionModal

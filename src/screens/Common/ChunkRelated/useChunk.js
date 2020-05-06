@@ -15,12 +15,15 @@ const useChunk = (completed, navigation) => {
   const { user } = useContext(UserContext);
   const [reload, setReload] = useState(true);
 
-  const { data, loading, err } = useFetch(
+  const { _data, loading, err } = useFetch(
     !completed ? 'get_corpora/' : 'get_user_corpora/',
-    { page },
-    (_data) => JSON.parse(_data.corpora),
+    { page, user: user.id },
+    (dat) => dat,
     reload,
   );
+
+  const data = _data ? JSON.parse(_data.corpora) : null;
+  const end = _data?.end;
 
   const initialChunk = {
     index: null,
@@ -143,7 +146,7 @@ const useChunk = (completed, navigation) => {
       .split(',')
       .map((item) => parseInt(item));
 
-    const _data = {
+    const data_ = {
       correct_noun: wordData.A.value,
       correct_noun_off_start: startA,
       correct_noun_off_end: endA,
@@ -161,7 +164,7 @@ const useChunk = (completed, navigation) => {
 
     setCurrentChunk(initialChunk);
 
-    const postResponse = await axiosPost('add_entry_user/', _data);
+    const postResponse = await axiosPost('add_entry_user/', data_);
     setReload((prevReload) => !prevReload);
     sendAlert(postResponse.data.text, '', () => setModalVisible(false));
   };
@@ -169,6 +172,7 @@ const useChunk = (completed, navigation) => {
 
   return {
     data,
+    end,
     err,
     loading,
     page,
