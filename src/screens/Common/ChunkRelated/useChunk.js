@@ -17,7 +17,7 @@ const useChunk = (completed, navigation) => {
 
   const { _data, loading, err } = useFetch(
     !completed ? 'get_corpora/' : 'get_user_corpora/',
-    { page, user: user.id },
+    { page, user: user?.id },
     (dat) => dat,
     reload,
   );
@@ -45,7 +45,7 @@ const useChunk = (completed, navigation) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setReload((prevReload) => !prevReload);
+      if (user) { setReload((prevReload) => !prevReload); }
     });
 
     return unsubscribe;

@@ -1,10 +1,10 @@
 import Modal from 'modal-react-native-web';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../reusables/components/Button/Button';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import Cross from '../../../reusables/components/General/Cross';
-import { borderStyles, paddingStyles } from '../../../reusables/styles/style';
+import { paddingStyles } from '../../../reusables/styles/style';
 import Title from '../Title';
 import PickerContainer from './PickerContainer';
 import Table from './Table';
@@ -28,6 +28,9 @@ const ChunkSelectionModal = ({
       setCurrentChunk((prevChunk) => ({ ...prevChunk, updated: true }));
     }
   }, [data]);
+
+  console.log(chunk.chunk?.map((item) => item.props.children));
+
   return (
     <>
       {chunk.chunk ? (
@@ -46,7 +49,10 @@ const ChunkSelectionModal = ({
               >
                 <Title
                   title={addEntry ? 'Done!' : getOperationName(operation)}
-                  textStyle={[paddingStyles.p_0, { color: getOperationColor(operation) }]}
+                  textStyle={[
+									  paddingStyles.p_0,
+									  { color: getOperationColor(operation) },
+                  ]}
                 />
                 <View style={{ flexDirection: 'row' }}>
                   <PickerContainer gender={data.gender} setGender={setData} />
@@ -63,12 +69,7 @@ const ChunkSelectionModal = ({
                 </View>
               </RowContainer>
               <ScrollView>
-                <RowContainer
-                  justifyContent="flex-start"
-                  contStyle={[borderStyles.bw_0, styles.rowCont]}
-                >
-                  {chunk.chunk}
-                </RowContainer>
+                <Text>{chunk.chunk}</Text>
               </ScrollView>
               <Table data={data} setData={setData} />
             </View>
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
   },
 
   rowCont: {
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     marginTop: 16,
     marginBottom: 8,
     padding: 8,

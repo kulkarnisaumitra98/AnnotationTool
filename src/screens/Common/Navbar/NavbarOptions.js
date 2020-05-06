@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ScreenContext from '../../../contexts/ScreenContext';
+import UserContext from '../../../contexts/UserContext';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import SelectHighlight from '../../../reusables/components/HOCs/SelectHighlight';
 import MyText from '../../../reusables/components/Texts/MyText';
@@ -13,6 +14,7 @@ const NavbarOptions = ({
   renderComponents,
 }) => {
   const { setScreen } = useContext(ScreenContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     setScreen(selected);
@@ -22,7 +24,7 @@ const NavbarOptions = ({
   return (
     <View style={styles.container}>
       <MyText style={[textStyles.header, styles.header]}>
-        Annotation Tool
+        {user ? `Welcome, ${user.name}` : 'Loading...'}
       </MyText>
       <RowContainer>
         {renderComponents(NavButton)}

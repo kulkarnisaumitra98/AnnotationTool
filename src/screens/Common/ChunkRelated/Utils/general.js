@@ -34,7 +34,7 @@ export const getOperationName = (operation) => {
     case 2:
       return 'Select Gender';
     default:
-      return 'Error';
+      return '';
   }
 };
 
