@@ -17,8 +17,9 @@ axios.defaults.withCredentials = true;
 
 const CompletedChunksScreen = ({ navigation }) => {
   const {
-    data,
+    err,
     end,
+    data,
     loading,
     setPage,
     currentChunk,
@@ -30,6 +31,7 @@ const CompletedChunksScreen = ({ navigation }) => {
     setWordData,
     operation,
     dataToServer,
+    setIsRemovalOp,
   } = useChunk(true, navigation);
 
   // useRenderCount();
@@ -45,20 +47,26 @@ const CompletedChunksScreen = ({ navigation }) => {
             setIndex={setCurrentChunk}
             modelToggle={setModalVisible}
             corporaToggle
-            LoadMoreChunks={!end ? data.length ? (
-              <UnderlinedLinkText
-                text="Load More Chunks"
-                handlePress={() => setPage((prevPage) => prevPage + 1)}
-              />
-            )
-              : (
-                <AlertText
-                  textStyle={{ textAlign: 'center' }}
-                  containerStyle={[dimensionStyles.w_50, { alignSelf: 'center' }]}
-                  text="No annotations, Get to work!!!"
-                  type="error"
-                />
-              ) : null}
+            LoadMoreChunks={
+							!end ? (
+							  data.length ? (
+  <UnderlinedLinkText
+    text="Load More Chunks"
+    handlePress={() => setPage((prevPage) => prevPage + 1)}
+  />
+							  ) : (
+  <AlertText
+    textStyle={{ textAlign: 'center' }}
+    containerStyle={[
+										  dimensionStyles.w_50,
+										  { alignSelf: 'center' },
+    ]}
+    text="No annotations, Get to work!!!"
+    type="error"
+  />
+							  )
+							) : null
+						}
           />
           {currentChunk.index !== null ? (
             <ChunkSelectionModal
@@ -72,6 +80,7 @@ const CompletedChunksScreen = ({ navigation }) => {
               setCurrentChunk={setCurrentChunk}
               operation={operation}
               completed
+              setIsRemovalOp={setIsRemovalOp}
             />
           ) : null}
         </>

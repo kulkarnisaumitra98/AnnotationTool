@@ -32,42 +32,57 @@ const ChunkScreen = ({ navigation }) => {
     setWordData,
     operation,
     dataToServer,
+    setIsRemovalOp,
   } = useChunk(false, navigation);
 
   // useRenderCount();
 
   return (
     <FlexedContainer contStyle={marginStyles.mt_12}>
-      {!loading ? !err ? (
-        <>
-          <ChunksList
-            data={data}
-            setIndex={setCurrentChunk}
-            modelToggle={setModalVisible}
-            corporaToggle={false}
-            LoadMoreChunks={!end ? data.length ? (
-              <UnderlinedLinkText
-                text="Load More Chunks"
-                handlePress={() => setPage((prevPage) => prevPage + 1)}
-              />
-            ) : <AlertText text="No annotations, Get to work!!!" type="error" /> : null}
-          />
-          {currentChunk.index !== null ? (
-            <ChunkSelectionModal
-              visible={modalVisible}
-              data={wordData}
-              chunk={currentChunk}
-              setData={setWordData}
-              closeModal={() => setModalVisible(false)}
-              addEntry={allDone}
-              handleAddEntry={dataToServer}
-              setCurrentChunk={setCurrentChunk}
-              completed={false}
-              operation={operation}
-            />
-          ) : null}
-        </>
-      ) : <>{sendAlert(err)}</> : (
+      {!loading ? (
+			  !err ? (
+  <>
+    <ChunksList
+      data={data}
+      setIndex={setCurrentChunk}
+      modelToggle={setModalVisible}
+      corporaToggle={false}
+      LoadMoreChunks={
+								!end ? (
+								  data.length ? (
+  <UnderlinedLinkText
+    text="Load More Chunks"
+    handlePress={() => setPage((prevPage) => prevPage + 1)}
+  />
+								  ) : (
+  <AlertText
+    text="No annotations, Get to work!!!"
+    type="error"
+  />
+								  )
+								) : null
+							}
+    />
+    {currentChunk.index !== null ? (
+      <ChunkSelectionModal
+        visible={modalVisible}
+        data={wordData}
+        chunk={currentChunk}
+        setData={setWordData}
+        closeModal={() => setModalVisible(false)}
+        addEntry={allDone}
+        handleAddEntry={dataToServer}
+        setCurrentChunk={setCurrentChunk}
+        completed={false}
+        operation={operation}
+        setIsRemovalOp={setIsRemovalOp}
+      />
+    ) : null}
+  </>
+			  ) : (
+  <>{sendAlert(err)}</>
+			  )
+      ) : (
         <ActivityIndicator size="small" style={marginStyles.mt_24} />
       )}
     </FlexedContainer>

@@ -2,7 +2,6 @@ import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import { dimensionStyles, marginStyles } from '../../../reusables/styles/style';
-import { getListItemCorpus } from './Utils/corpusProcessing';
 
 const styles = StyleSheet.create({
   row: {
@@ -28,32 +27,24 @@ const styles = StyleSheet.create({
 const ChunksList = ({
   data, setIndex, modelToggle, corporaToggle, LoadMoreChunks,
 }) => {
-  const Row = ({ fields, index, pk }) => {
-    const chunk = getListItemCorpus(
-      { fontSize: 20, marginRight: 6 },
-      fields,
-      corporaToggle,
-    );
-    return (
-      <TouchableOpacity
-        onPress={() => {
+  const Row = ({ fields, index, pk }) => (
+    <TouchableOpacity
+      onPress={() => {
 				  setIndex((prevData) => ({ ...prevData, index }));
 				  modelToggle(true);
-        }}
-        style={styles.row}
-      >
-        <RowContainer contStyle={dimensionStyles.w_100} justifyContent="flex-start">
-          <Text style={{ fontSize: 18, paddingTop: 2 }}>
-            {`${index + 1}.`}
-          </Text>
-          <Text numberOfLines={1} style={[marginStyles.ml_16, { width: '96%', borderWidth: 0 }]}>
-            {chunk}
-          </Text>
-        </RowContainer>
-      </TouchableOpacity>
-    );
-  };
-
+      }}
+      style={styles.row}
+    >
+      <RowContainer contStyle={dimensionStyles.w_100} justifyContent="flex-start">
+        <Text style={{ fontSize: 18, paddingTop: 0 }}>
+          {`${index + 1}.`}
+        </Text>
+        <Text numberOfLines={1} style={[marginStyles.ml_16, { width: '96%', borderWidth: 0, fontSize: 18 }]}>
+          {corporaToggle ? fields.corpus[0] : fields.corpus}
+        </Text>
+      </RowContainer>
+    </TouchableOpacity>
+  );
   return (
     <FlatList
       style={marginStyles.mb_16}

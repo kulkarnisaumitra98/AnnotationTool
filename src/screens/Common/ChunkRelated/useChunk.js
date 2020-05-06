@@ -3,17 +3,20 @@
 import { useContext, useEffect, useState } from 'react';
 import UserContext from '../../../contexts/UserContext';
 import { BagError, BagSuccess } from '../../../reusables/styles/colors';
+import useDidUpdate from '../useDidUpdate';
+import usePrevious from '../usePrevious';
 import { sendAlert } from '../Utils/alert';
 import { axiosPost } from '../Utils/axiosConfig';
 import { useFetch } from '../Utils/useFetch';
-import { getSelectedCorpus } from './Utils/corpusProcessing';
-import { getNextOperation, operationToWord } from './Utils/general';
+import { getSelectedCorpus, highlighSelected, removeSelected } from './Utils/corpusProcessing';
+import { getNextOperation, getOperationBgColor, operationToWord } from './Utils/general';
 import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
 const useChunk = (completed, navigation) => {
   const [page, setPage] = useState(1);
   const { user } = useContext(UserContext);
   const [reload, setReload] = useState(true);
+  const [currOpData, setCurrOpData] = useState(null);
 
   const { _data, loading, err } = useFetch(
     !completed ? 'get_corpora/' : 'get_user_corpora/',
@@ -42,6 +45,9 @@ const useChunk = (completed, navigation) => {
 
   const [wordData, setWordData] = useState(initialState);
   const [operation, setOperation] = useState(0);
+  const [isRemovalOp, setIsRemovalOp] = useState({ value: false, op: null });
+
+  const prevWordData = usePrevious(wordData);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -51,31 +57,92 @@ const useChunk = (completed, navigation) => {
     return unsubscribe;
   }, [navigation]);
 
-  useEffect(() => {
-    const operationNumber = getNextOperation(wordData);
-    setOperation(operationNumber);
-  }, [wordData]);
+
+  useDidUpdate(() => {
+    if (operation === 2) { return; }
+    setWordData((prevData) => ({
+      ...prevData,
+      [operationToWord(operation)]: {
+        ...currOpData,
+        color: getOperationBgColor(operation),
+      },
+    }));
+  }, [currOpData]);
 
   useEffect(() => {
-    if (operation === 3) {
-      setAllDone(true);
-    } else {
-      setAllDone(false);
+    if (isRemovalOp.value) {
+      setWordData((prevData) => ({
+        ...prevData,
+        [operationToWord(isRemovalOp.op)]: getInitialWord(
+          getOperationBgColor(isRemovalOp.op),
+        ),
+      }));
     }
-    if (currentChunk.index !== null) {
+  }, [isRemovalOp.value]);
+
+  useDidUpdate(() => {
+    if (completed) {
       setCurrentChunk((prevData) => ({
         ...prevData,
         index: currentChunk.index,
         chunk: getSelectedCorpus(
           { fontSize: 24, marginRight: 6 },
           data[currentChunk.index].fields,
-          allDone ? () => {} : handleWordPress,
+          handleWordPress,
           wordData,
-          completed,
+          true,
+        ),
+      }));
+      return;
+    }
+    if (prevWordData.gender !== wordData.gender) {
+      setOperation(getNextOperation(wordData));
+      return;
+    }
+    if (isRemovalOp.value) {
+      // console.log(prevWordData, 'prev');
+      setCurrentChunk((prevData) => ({
+        ...prevData,
+        index: prevData.index,
+        chunk: removeSelected(
+          prevWordData,
+          isRemovalOp.op,
+          prevData.chunk,
+          handleWordPress,
+          { fontSize: 24, marginRight: 6 },
+        ),
+      }));
+    } else if (currentChunk.index !== null) {
+      setCurrentChunk((prevData) => ({
+        ...prevData,
+        index: prevData.index,
+        chunk: highlighSelected(
+          wordData[operationToWord(operation)],
+          prevData.chunk,
+          { fontSize: 24, marginRight: 6 },
         ),
       }));
     }
-  }, [wordData, operation, allDone]);
+  }, [wordData]);
+
+  useDidUpdate(() => {
+    if (isRemovalOp.value) {
+      setIsRemovalOp({ value: false, op: null });
+    }
+    setOperation(getNextOperation(wordData));
+  }, [currentChunk.chunk]);
+
+  useDidUpdate(() => {
+    if (operation === 3) {
+      setAllDone(true);
+    } else {
+      setAllDone(false);
+    }
+  }, [operation]);
+
+  const handleWordPress = (value, offset, index) => () => {
+    setCurrOpData({ value, offset, index });
+  };
 
   useEffect(() => {
     if (currentChunk.index !== null) {
@@ -109,7 +176,7 @@ const useChunk = (completed, navigation) => {
           gender: gender + 1,
         });
       } else {
-        setWordData(initialState);
+        // setWordData(initialState);
 
         setCurrentChunk((prevData) => ({
           ...prevData,
@@ -123,20 +190,6 @@ const useChunk = (completed, navigation) => {
       }
     }
   }, [currentChunk.index]);
-
-  const handleWordPress = (value, offset, index) => () => {
-    if (operation === 2) return;
-
-    setWordData((prevData) => ({
-      ...prevData,
-      [operationToWord(operation)]: {
-        ...prevData[operationToWord(operation)],
-        value,
-        offset,
-        index,
-      },
-    }));
-  };
 
   const dataToServer = async () => {
     const [startA, endA] = wordData.A.offset
@@ -189,6 +242,7 @@ const useChunk = (completed, navigation) => {
     setOperation,
     dataToServer,
     setReload,
+    setIsRemovalOp,
   };
 };
 

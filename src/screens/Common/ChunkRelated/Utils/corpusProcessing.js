@@ -3,6 +3,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { BagError, BagSuccess } from '../../../../reusables/styles/colors';
+import { operationToWord } from './general';
 
 export const getListItemCorpus = (textStyle, fields, completed) => {
   let index = 0;
@@ -79,6 +80,7 @@ export const getListItemCorpus = (textStyle, fields, completed) => {
 
 
 export const getSelectedCorpus = (textStyle, fields, setWord, words, completed) => {
+  console.log('I am called getSelcetd..........................');
   let index = 0;
   let { corpus, pronoun_off_start } = fields;
 
@@ -128,4 +130,47 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words, completed) 
   });
 
   return texts;
+};
+
+export const highlighSelected = (wordData, chunk, textStyle) => {
+  console.log(wordData, 'high');
+
+  const t0 = performance.now();
+  console.log(t0, 't0');
+  const newChunk = [...chunk];
+  const t1 = performance.now();
+  console.log(t1, 't1');
+  console.log(t1 - t0);
+  const { index, value, color } = wordData;
+
+  newChunk[index] = (
+    <Text
+      key={index}
+      style={[{ backgroundColor: color }, textStyle]}
+    >
+      {value}
+    </Text>
+  );
+
+  return newChunk;
+};
+
+
+export const removeSelected = (prevWordData, operation, chunk, setWord, textStyle) => {
+  const newChunk = [...chunk];
+  console.log(prevWordData[operationToWord(operation)], 'sex');
+  const { index, value, offset } = prevWordData[operationToWord(operation)];
+
+
+  newChunk[index] = (
+    <Text
+      onPress={setWord(value, offset, index)}
+      key={index}
+      style={textStyle}
+    >
+      {value}
+    </Text>
+  );
+
+  return newChunk;
 };

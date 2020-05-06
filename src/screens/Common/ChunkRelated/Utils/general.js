@@ -1,4 +1,4 @@
-import { BLUE_BUTTON, TEXT_BLACK } from '../../../../reusables/styles/colors';
+import { BagError, BagSuccess, BLUE_BUTTON, TEXT_BLACK } from '../../../../reusables/styles/colors';
 
 export const operationToWord = (operation) => {
   switch (operation) {
@@ -44,6 +44,21 @@ export const getOperationColor = (operation) => {
       return 'green';
     case 1:
       return 'red';
+    case 2:
+      return BLUE_BUTTON;
+    case 3:
+      return 'green';
+    default:
+      return TEXT_BLACK;
+  }
+};
+
+export const getOperationBgColor = (operation) => {
+  switch (operation) {
+    case 0:
+      return BagSuccess;
+    case 1:
+      return BagError;
     case 2:
       return BLUE_BUTTON;
     case 3:

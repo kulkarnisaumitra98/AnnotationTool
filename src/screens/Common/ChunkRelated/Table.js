@@ -2,12 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '../../../reusables/components/Button/Button';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
-import { BagError, BagSuccess, TEXT_BLACK } from '../../../reusables/styles/colors';
+import { TEXT_BLACK } from '../../../reusables/styles/colors';
 import { paddingStyles } from '../../../reusables/styles/style';
-import { getInitialWord } from './Utils/getInitialWord';
 
 const Table = ({
-  data, setData,
+  data, setData, setIsRemovalOp,
 }) => {
   const {
     A, B,
@@ -36,10 +35,11 @@ const Table = ({
             disabled={!isA}
             containerStyle={styles.button}
             title="Remove"
-            handlePress={() => setData((prevData) => ({
-						    ...prevData,
-						    A: getInitialWord(BagSuccess),
-						  }))}
+						// handlePress={() => setData((prevData) => ({
+						//     ...prevData,
+						//     A: getInitialWord(BagSuccess),
+						//   }))}
+            handlePress={() => setIsRemovalOp({ value: true, op: 0 })}
           />
         </RowContainer>
         <Text style={styles.textStyle}>
@@ -73,10 +73,11 @@ const Table = ({
             disabled={!isB}
             containerStyle={styles.button}
             title="Remove"
-            handlePress={() => setData((prevData) => ({
-						    ...prevData,
-						    B: getInitialWord(BagError),
-						  }))}
+						// handlePress={() => setData((prevData) => ({
+						//     ...prevData,
+						//     B: getInitialWord(BagError),
+						//   }))}
+            handlePress={() => setIsRemovalOp({ value: true, op: 1 })}
           />
         </RowContainer>
         <Text style={styles.textStyle}>

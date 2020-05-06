@@ -21,15 +21,16 @@ const ChunkSelectionModal = ({
   operation,
   setCurrentChunk,
   completed,
+  setIsRemovalOp,
 }) => {
   useEffect(() => {
     if (completed && chunk.chunk) {
-      console.log(chunk.updated, 'fds');
+      // console.log(chunk.updated, 'fds');
       setCurrentChunk((prevChunk) => ({ ...prevChunk, updated: true }));
     }
   }, [data]);
 
-  console.log(chunk.chunk?.map((item) => item.props.children));
+  // console.log(chunk.chunk?.map((item) => item.props.children));
 
   return (
     <>
@@ -71,7 +72,11 @@ const ChunkSelectionModal = ({
               <ScrollView>
                 <Text>{chunk.chunk}</Text>
               </ScrollView>
-              <Table data={data} setData={setData} />
+              <Table
+                data={data}
+                setData={setData}
+                setIsRemovalOp={setIsRemovalOp}
+              />
             </View>
           </View>
         </Modal>
