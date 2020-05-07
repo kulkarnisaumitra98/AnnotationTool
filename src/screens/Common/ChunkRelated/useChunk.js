@@ -139,7 +139,7 @@ const useChunk = (completed, navigation) => {
           index,
           getOperationBgColor(operation),
         ),
-      }), [currentIndex]);
+      }));
     }
   };
 

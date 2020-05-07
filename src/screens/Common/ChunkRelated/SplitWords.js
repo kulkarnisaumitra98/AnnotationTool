@@ -26,4 +26,4 @@ const SplitWords = ({ processedWords, handlePressWord }) => {
   );
 };
 
-export default React.memo(SplitWords);
+export default SplitWords;
