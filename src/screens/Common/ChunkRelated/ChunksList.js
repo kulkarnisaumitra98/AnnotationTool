@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { FlatList, Platform, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import { dimensionStyles, marginStyles } from '../../../reusables/styles/style';
 
@@ -48,7 +48,7 @@ const ChunksList = ({
   return (
     <FlatList
       style={marginStyles.mb_16}
-      scrollEnabled={false}
+      scrollEnabled={Platform.OS !== 'web'}
       data={data}
       renderItem={({ item, index }) => (
         <Row fields={item.fields} index={index} pk={item.pk} />

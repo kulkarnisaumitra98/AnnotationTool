@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { handleError, handleResponse } from './handleServer';
 
-axios.defaults.baseURL = 'http://127.0.0.1:9996/';
+axios.defaults.baseURL = 'http://192.168.31.24:8000';
 
 export const axiosGet = async (url, params) => {
   let responseHandled;

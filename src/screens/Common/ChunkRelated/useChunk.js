@@ -12,7 +12,7 @@ import { getSelectedCorpus, highlighSelected, removeSelected } from './Utils/cor
 import { getNextOperation, getOperationBgColor, operationToWord } from './Utils/general';
 import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
-const useChunk = (completed, navigation) => {
+const useChunk = (completed, navigation, textStyle) => {
   const [page, setPage] = useState(1);
   const { user } = useContext(UserContext);
   const [reload, setReload] = useState(true);
@@ -86,7 +86,7 @@ const useChunk = (completed, navigation) => {
         ...prevData,
         index: currentChunk.index,
         chunk: getSelectedCorpus(
-          { fontSize: 24, marginRight: 6 },
+          textStyle,
           data[currentChunk.index].fields,
           handleWordPress,
           wordData,
@@ -95,9 +95,11 @@ const useChunk = (completed, navigation) => {
       }));
       return;
     }
-    if (prevWordData.gender !== wordData.gender) {
-      setOperation(getNextOperation(wordData));
-      return;
+    if (prevWordData) {
+      if (prevWordData.gender !== wordData.gender) {
+        setOperation(getNextOperation(wordData));
+        return;
+      }
     }
     if (isRemovalOp.value) {
       // console.log(prevWordData, 'prev');
@@ -109,7 +111,7 @@ const useChunk = (completed, navigation) => {
           isRemovalOp.op,
           prevData.chunk,
           handleWordPress,
-          { fontSize: 24, marginRight: 6 },
+          textStyle,
         ),
       }));
     } else if (currentChunk.index !== null) {
@@ -119,7 +121,7 @@ const useChunk = (completed, navigation) => {
         chunk: highlighSelected(
           wordData[operationToWord(operation)],
           prevData.chunk,
-          { fontSize: 24, marginRight: 6 },
+          textStyle,
         ),
       }));
     }
@@ -182,7 +184,7 @@ const useChunk = (completed, navigation) => {
           ...prevData,
           index: currentChunk.index,
           chunk: getSelectedCorpus(
-            { fontSize: 24, marginRight: 6 },
+            textStyle,
             data[currentChunk.index].fields,
             handleWordPress,
           ),

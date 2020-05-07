@@ -1,18 +1,18 @@
+import { Entypo } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Button from '../../../reusables/components/Button/Button';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import { TEXT_BLACK } from '../../../reusables/styles/colors';
 import { paddingStyles } from '../../../reusables/styles/style';
 
-const Table = ({ data, setData, setIsRemovalOp }) => {
+const TableMobile = ({ data, setData, setIsRemovalOp }) => {
   const { A, B } = data;
 
   const isA = A.value !== 'None';
   const isB = B.value !== 'None';
 
   return (
-    <RowContainer contStyle={styles.container}>
+    <View style={styles.container}>
       <View style={styles.wordCont}>
         <RowContainer contStyle={paddingStyles.p_0}>
           <Text style={styles.textStyle}>
@@ -27,16 +27,16 @@ const Table = ({ data, setData, setIsRemovalOp }) => {
               {A.value}
             </Text>
           </Text>
-          <Button
+          <TouchableOpacity
             disabled={!isA}
-            containerStyle={styles.button}
-            title="Remove"
-						// handlePress={() => setData((prevData) => ({
-						//     ...prevData,
-						//     A: getInitialWord(BagSuccess),
-						//   }))}
-            handlePress={() => setIsRemovalOp({ value: true, op: 0 })}
-          />
+            onPress={() => setIsRemovalOp({ value: true, op: 0 })}
+          >
+            <Entypo
+              name="circle-with-cross"
+              size={24}
+              color={!isB ? 'grey' : 'red'}
+            />
+          </TouchableOpacity>
         </RowContainer>
         <Text style={styles.textStyle}>
           Offset =
@@ -65,16 +65,16 @@ const Table = ({ data, setData, setIsRemovalOp }) => {
               {B.value}
             </Text>
           </Text>
-          <Button
+          <TouchableOpacity
             disabled={!isB}
-            containerStyle={styles.button}
-            title="Remove"
-						// handlePress={() => setData((prevData) => ({
-						//     ...prevData,
-						//     B: getInitialWord(BagError),
-						//   }))}
-            handlePress={() => setIsRemovalOp({ value: true, op: 1 })}
-          />
+            onPress={() => setIsRemovalOp({ value: true, op: 1 })}
+          >
+            <Entypo
+              name="circle-with-cross"
+              size={24}
+              color={!isB ? 'grey' : 'red'}
+            />
+          </TouchableOpacity>
         </RowContainer>
         <Text style={styles.textStyle}>
           Offset =
@@ -89,26 +89,22 @@ const Table = ({ data, setData, setIsRemovalOp }) => {
           </Text>
         </Text>
       </View>
-    </RowContainer>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    borderWidth: 0,
-    marginBottom: 16,
-    marginTop: 'auto',
-    padding: 0,
-    borderRadius: 8,
+    marginTop: 8,
   },
 
   wordCont: {
-    width: '48%',
+    width: '100%',
     borderWidth: 1,
     borderRadius: 8,
     borderColor: '#ddd',
     padding: 4,
+    marginTop: 16,
 
     elevation: 2,
     shadowColor: '#000',
@@ -122,7 +118,7 @@ const styles = StyleSheet.create({
 
   textStyle: {
     // fontWeight: 'bold',
-    fontSize: 16,
+    // fontSize: 16,
     color: TEXT_BLACK,
     margin: 8,
   },
@@ -134,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Table;
+export default TableMobile;

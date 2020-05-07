@@ -133,14 +133,7 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words, completed) 
 };
 
 export const highlighSelected = (wordData, chunk, textStyle) => {
-  console.log(wordData, 'high');
-
-  const t0 = performance.now();
-  console.log(t0, 't0');
   const newChunk = [...chunk];
-  const t1 = performance.now();
-  console.log(t1, 't1');
-  console.log(t1 - t0);
   const { index, value, color } = wordData;
 
   newChunk[index] = (
@@ -158,7 +151,7 @@ export const highlighSelected = (wordData, chunk, textStyle) => {
 
 export const removeSelected = (prevWordData, operation, chunk, setWord, textStyle) => {
   const newChunk = [...chunk];
-  console.log(prevWordData[operationToWord(operation)], 'sex');
+  // console.log(prevWordData[operationToWord(operation)], 'sex');
   const { index, value, offset } = prevWordData[operationToWord(operation)];
 
 

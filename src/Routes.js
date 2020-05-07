@@ -5,8 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react';
-import { AsyncStorage } from 'react-native';
-import { Platform } from 'react-native-web';
+import { AsyncStorage, Platform } from 'react-native';
 import ScreenContext from './contexts/ScreenContext';
 import UserContext from './contexts/UserContext';
 import { isMountedRef, navigate, navigationRef } from './reusables/functions/NavigatorService';
@@ -104,7 +103,7 @@ const Routes = () => {
 
   return (
     <>
-      {user ? <NavBar /> : null}
+      {user && Platform.OS === 'web' ? <NavBar /> : null}
       <NavigationContainer ref={navigationRef}>
         <StackRoutes />
       </NavigationContainer>
