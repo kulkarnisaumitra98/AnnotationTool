@@ -32,7 +32,7 @@ const reducer = (state, { type, payload }) => {
         ...state,
         wordData: {
           ...state.wordData,
-          gender: payload.value,
+          gender: parseInt(payload.value),
         },
       };
     }
@@ -96,6 +96,7 @@ const useChunk = (completed, navigation) => {
   }, [navigation]);
 
   useDidUpdate(() => {
+    console.log(operation);
     if (currentIndex !== null) {
       setOperation(getNextOperation(wordData));
     }
@@ -156,19 +157,25 @@ const useChunk = (completed, navigation) => {
       }
 
       dispatch({ type: GENERAL_SPREAD, payload });
+    } else {
+      dispatch({ type: GENERAL_SPREAD, payload: initialAnnoState });
+      setUpdated(false);
     }
   }, [currentIndex]);
 
   const handlePressWord = (word, offset, index, remove, op) => {
-    if (operation === 2 && !remove) return;
+    if ((operation >= 2 && !remove)) return;
     if (completed) {
       setUpdated(true);
     }
 
     const updatedProcessCorpusWords = [...processedWords];
+
+    const off = remove ? parseInt(offset.split(',')[0]) : offset;
+
     updatedProcessCorpusWords[index] = {
       word,
-      offset,
+      offset: off,
       index,
       color: remove ? null : getOperationBgColor(operation),
     };
