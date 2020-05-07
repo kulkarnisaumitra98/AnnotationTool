@@ -15,7 +15,6 @@ const App = () => {
       <UserContext.Provider value={{ user, setUser }}>
         <SafeAreaView style={[styles.container, dimensionStyles.dw]}>
           <Routes />
-          {/* <Test /> */}
         </SafeAreaView>
       </UserContext.Provider>
     </ScreenContext.Provider>
