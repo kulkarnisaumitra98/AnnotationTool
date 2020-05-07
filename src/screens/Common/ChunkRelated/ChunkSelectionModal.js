@@ -1,40 +1,41 @@
 import Modal from 'modal-react-native-web';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Button from '../../../reusables/components/Button/Button';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import Cross from '../../../reusables/components/General/Cross';
 import { paddingStyles } from '../../../reusables/styles/style';
 import Title from '../Title';
+import useDidUpdate from '../useDidUpdate';
 import PickerContainer from './PickerContainer';
+import SplitWords from './SplitWords';
 import Table from './Table';
 import { getOperationColor, getOperationName } from './Utils/general';
 
 const ChunkSelectionModal = ({
   visible,
   closeModal,
-  data,
-  chunk,
-  setData,
+  tableData,
+  setTableData,
   addEntry,
   handleAddEntry,
   operation,
-  setCurrentChunk,
   completed,
-  setIsRemovalOp,
+  processedWords,
+  handlePressWord,
+  updated,
+  setUpdated,
 }) => {
-  useEffect(() => {
-    if (completed && chunk.chunk) {
-      // console.log(chunk.updated, 'fds');
-      setCurrentChunk((prevChunk) => ({ ...prevChunk, updated: true }));
+  useDidUpdate(() => {
+    if (completed && processedWords) {
+      setUpdated(true);
     }
-  }, [data]);
+  }, [tableData]);
 
-  // console.log(chunk.chunk?.map((item) => item.props.children));
-
+  const disabled = ((!addEntry || !updated) && completed) || (!addEntry && !completed);
   return (
     <>
-      {chunk.chunk ? (
+      {processedWords ? (
         <Modal
           visible={visible}
           onRequestClose={closeModal}
@@ -56,12 +57,12 @@ const ChunkSelectionModal = ({
                   ]}
                 />
                 <View style={{ flexDirection: 'row' }}>
-                  <PickerContainer gender={data.gender} setGender={setData} />
+                  <PickerContainer
+                    gender={tableData.gender}
+                    setGender={setTableData}
+                  />
                   <Button
-                    disabled={
-											((!addEntry || !chunk.updated) && completed)
-											|| (!addEntry && !completed)
-										}
+                    disabled={disabled}
                     title={completed ? 'Update Entry' : 'Add Entry'}
                     handlePress={handleAddEntry}
                     containerStyle={styles.button}
@@ -70,13 +71,14 @@ const ChunkSelectionModal = ({
                 </View>
               </RowContainer>
               <ScrollView>
-                <Text>{chunk.chunk}</Text>
+                <Text>
+                  <SplitWords
+                    processedWords={processedWords}
+                    handlePressWord={handlePressWord}
+                  />
+                </Text>
               </ScrollView>
-              <Table
-                data={data}
-                setData={setData}
-                setIsRemovalOp={setIsRemovalOp}
-              />
+              <Table data={tableData} handleRemoveWord={handlePressWord} />
             </View>
           </View>
         </Modal>

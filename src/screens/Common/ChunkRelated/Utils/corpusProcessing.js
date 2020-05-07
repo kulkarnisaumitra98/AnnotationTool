@@ -1,86 +1,11 @@
+/* eslint-disable import/prefer-default-export */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable camelcase */
-import React from 'react';
-import { Text } from 'react-native';
-import { BagError, BagSuccess } from '../../../../reusables/styles/colors';
-import { operationToWord } from './general';
-
-export const getListItemCorpus = (textStyle, fields, completed) => {
-  let index = 0;
-  let {
-    corpus,
-    pronoun_off_start,
-  } = fields;
-
-  if (Array.isArray(corpus)) {
-    pronoun_off_start = corpus[1];
-    corpus = corpus[0];
-  }
-
-  const texts = corpus.split(' ').map((item, i) => {
-    if (index === pronoun_off_start) {
-      index += item.length + 1;
-
-      return (
-        <Text key={i}>
-          <Text style={[{ backgroundColor: 'yellow' }, textStyle]}>{item}</Text>
-        </Text>
-      );
-    }
-
-    if (completed) {
-      const { correct_noun_off_start, mislead_noun_off_start } = fields;
-
-      if (index === correct_noun_off_start) {
-        index += item.length + 1;
-
-        return (
-          <Text
-            key={index}
-            style={[textStyle, { backgroundColor: BagSuccess }]}
-          >
-            {item}
-          </Text>
-        );
-      }
-      if (index === mislead_noun_off_start) {
-        index += item.length + 1;
-
-        return (
-          <Text
-            key={index}
-            style={[textStyle, { backgroundColor: BagError }]}
-          >
-            {item}
-          </Text>
-        );
-      }
-
-      index += item.length + 1;
+import { getOperationBgColor } from './general';
 
 
-      return (
-        <Text key={index} style={textStyle}>
-          {item}
-        </Text>
-      );
-    }
-
-    index += item.length + 1;
-
-    return (
-      <Text key={index} style={textStyle}>
-        {item}
-      </Text>
-    );
-  });
-
-  return texts;
-};
-
-
-export const getSelectedCorpus = (textStyle, fields, setWord, words, completed) => {
-  console.log('I am called getSelcetd..........................');
+export const processCorpusWords = (fields, wordData, completed) => {
+  // console.log(fields);
   let index = 0;
   let { corpus, pronoun_off_start } = fields;
 
@@ -89,81 +14,32 @@ export const getSelectedCorpus = (textStyle, fields, setWord, words, completed) 
     corpus = corpus[0];
   }
 
-  const texts = corpus.split(' ').map((item, i) => {
-    if (index === pronoun_off_start) {
-      index += item.length + 1;
 
-      return (
-        <Text key={i}>
-          <Text style={[{ backgroundColor: 'yellow' }, textStyle]}>{item}</Text>
-        </Text>
-      );
+  const processedWords = corpus.split(' ').map((item, idx) => {
+    if (index === pronoun_off_start) {
+      const returnItem = { word: item, offset: index, color: 'yellow' };
+      index += item.length + 1;
+      return returnItem;
     }
 
-    if (words) {
-      const wordKeys = Object.keys(words);
-      for (let j = 0; j < wordKeys.length; j += 1) {
-        if (words[wordKeys[j]].index === i) {
+    if (wordData) {
+      for (let j = 0; j < wordData.length; j += 1) {
+        if (wordData[j].index === idx) {
+          const returnItem = {
+            word: item,
+            offset: index,
+            color: getOperationBgColor(wordData[j].op),
+          };
           index += item.length + 1;
-
-          return (
-            <Text key={index} style={[textStyle, { backgroundColor: words[wordKeys[j]].color }]}>
-              {item}
-
-            </Text>
-          );
+          return returnItem;
         }
       }
     }
 
+    const returnItem = { word: item, offset: index };
     index += item.length + 1;
-
-    return (
-      <Text
-        onPress={setWord(item, `${index - item.length - 1}, ${index - 1}`, i)}
-        key={index}
-        style={textStyle}
-      >
-        {item}
-      </Text>
-    );
+    return returnItem;
   });
 
-  return texts;
-};
-
-export const highlighSelected = (wordData, chunk, textStyle) => {
-  const newChunk = [...chunk];
-  const { index, value, color } = wordData;
-
-  newChunk[index] = (
-    <Text
-      key={index}
-      style={[{ backgroundColor: color }, textStyle]}
-    >
-      {value}
-    </Text>
-  );
-
-  return newChunk;
-};
-
-
-export const removeSelected = (prevWordData, operation, chunk, setWord, textStyle) => {
-  const newChunk = [...chunk];
-  // console.log(prevWordData[operationToWord(operation)], 'sex');
-  const { index, value, offset } = prevWordData[operationToWord(operation)];
-
-
-  newChunk[index] = (
-    <Text
-      onPress={setWord(value, offset, index)}
-      key={index}
-      style={textStyle}
-    >
-      {value}
-    </Text>
-  );
-
-  return newChunk;
+  return processedWords;
 };

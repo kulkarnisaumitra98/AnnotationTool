@@ -4,19 +4,17 @@ import { useContext, useEffect, useState } from 'react';
 import UserContext from '../../../contexts/UserContext';
 import { BagError, BagSuccess } from '../../../reusables/styles/colors';
 import useDidUpdate from '../useDidUpdate';
-import usePrevious from '../usePrevious';
 import { sendAlert } from '../Utils/alert';
 import { axiosPost } from '../Utils/axiosConfig';
 import { useFetch } from '../Utils/useFetch';
-import { getSelectedCorpus, highlighSelected, removeSelected } from './Utils/corpusProcessing';
+import { processCorpusWords } from './Utils/corpusProcessing';
 import { getNextOperation, getOperationBgColor, operationToWord } from './Utils/general';
 import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
-const useChunk = (completed, navigation, textStyle) => {
+const useChunk = (completed, navigation) => {
   const [page, setPage] = useState(1);
   const { user } = useContext(UserContext);
   const [reload, setReload] = useState(true);
-  const [currOpData, setCurrOpData] = useState(null);
 
   const { _data, loading, err } = useFetch(
     !completed ? 'get_corpora/' : 'get_user_corpora/',
@@ -28,14 +26,11 @@ const useChunk = (completed, navigation, textStyle) => {
   const data = _data ? JSON.parse(_data.corpora) : null;
   const end = _data?.end;
 
-  const initialChunk = {
-    index: null,
-    chunk: null,
-    updated: false,
-  };
-  const [currentChunk, setCurrentChunk] = useState(initialChunk);
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [allDone, setAllDone] = useState(false);
+  const [updated, setUpdated] = useState(false);
+  const [processedWords, setProcessedWords] = useState(null);
 
   const initialState = {
     A: getInitialWord(BagSuccess),
@@ -45,93 +40,22 @@ const useChunk = (completed, navigation, textStyle) => {
 
   const [wordData, setWordData] = useState(initialState);
   const [operation, setOperation] = useState(0);
-  const [isRemovalOp, setIsRemovalOp] = useState({ value: false, op: null });
-
-  const prevWordData = usePrevious(wordData);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (user) { setReload((prevReload) => !prevReload); }
+      if (user) {
+        setReload((prevReload) => !prevReload);
+      }
     });
 
     return unsubscribe;
   }, [navigation]);
 
-
   useDidUpdate(() => {
-    if (operation === 2) { return; }
-    setWordData((prevData) => ({
-      ...prevData,
-      [operationToWord(operation)]: {
-        ...currOpData,
-        color: getOperationBgColor(operation),
-      },
-    }));
-  }, [currOpData]);
-
-  useEffect(() => {
-    if (isRemovalOp.value) {
-      setWordData((prevData) => ({
-        ...prevData,
-        [operationToWord(isRemovalOp.op)]: getInitialWord(
-          getOperationBgColor(isRemovalOp.op),
-        ),
-      }));
-    }
-  }, [isRemovalOp.value]);
-
-  useDidUpdate(() => {
-    if (completed) {
-      setCurrentChunk((prevData) => ({
-        ...prevData,
-        index: currentChunk.index,
-        chunk: getSelectedCorpus(
-          textStyle,
-          data[currentChunk.index].fields,
-          handleWordPress,
-          wordData,
-          true,
-        ),
-      }));
-      return;
-    }
-    if (prevWordData) {
-      if (prevWordData.gender !== wordData.gender) {
-        setOperation(getNextOperation(wordData));
-        return;
-      }
-    }
-    if (isRemovalOp.value) {
-      // console.log(prevWordData, 'prev');
-      setCurrentChunk((prevData) => ({
-        ...prevData,
-        index: prevData.index,
-        chunk: removeSelected(
-          prevWordData,
-          isRemovalOp.op,
-          prevData.chunk,
-          handleWordPress,
-          textStyle,
-        ),
-      }));
-    } else if (currentChunk.index !== null) {
-      setCurrentChunk(() => ({
-        index: currentChunk.index,
-        chunk: highlighSelected(
-          wordData[operationToWord(operation)],
-          currentChunk.chunk,
-          textStyle,
-        ),
-      }));
+    if (currentIndex !== null) {
+      setOperation(getNextOperation(wordData));
     }
   }, [wordData]);
-
-  useDidUpdate(() => {
-    if (isRemovalOp.value) {
-      setIsRemovalOp({ value: false, op: null });
-    }
-    setOperation(getNextOperation(wordData));
-  }, [currentChunk.chunk]);
 
   useDidUpdate(() => {
     if (operation === 3) {
@@ -141,12 +65,8 @@ const useChunk = (completed, navigation, textStyle) => {
     }
   }, [operation]);
 
-  const handleWordPress = (value, offset, index) => () => {
-    setCurrOpData({ value, offset, index });
-  };
-
-  useEffect(() => {
-    if (currentChunk.index !== null) {
+  useDidUpdate(() => {
+    if (currentIndex !== null) {
       if (completed) {
         const {
           correct_noun,
@@ -156,7 +76,7 @@ const useChunk = (completed, navigation, textStyle) => {
           mislead_noun_off_start,
           mislead_noun_index,
           gender,
-        } = data[currentChunk.index].fields;
+        } = data[currentIndex].fields;
         setWordData({
           A: getWordData(
             correct_noun,
@@ -176,21 +96,52 @@ const useChunk = (completed, navigation, textStyle) => {
           ),
           gender: gender + 1,
         });
+        setProcessedWords(
+          processCorpusWords(
+            data[currentIndex].fields,
+            [{ op: 0, index: correct_noun_index }, { op: 1, index: mislead_noun_index }],
+            completed,
+          ),
+        );
       } else {
         setWordData(initialState);
-
-        setCurrentChunk((prevData) => ({
-          ...prevData,
-          index: currentChunk.index,
-          chunk: getSelectedCorpus(
-            textStyle,
-            data[currentChunk.index].fields,
-            handleWordPress,
-          ),
-        }));
+        setProcessedWords(processCorpusWords(data[currentIndex].fields));
       }
+    } else {
+      setCurrentIndex(null);
+      setUpdated(null);
+      setProcessedWords(null);
     }
-  }, [currentChunk.index]);
+  }, [currentIndex]);
+
+  const handlePressWord = (word, offset, index, remove, op) => {
+    if (operation === 2 && !remove) return;
+
+    const updatedProcessCorpusWords = [...processedWords];
+    updatedProcessCorpusWords[index] = {
+      word,
+      offset,
+      index,
+      color: remove ? null : getOperationBgColor(operation),
+    };
+    setProcessedWords(updatedProcessCorpusWords);
+    if (remove) {
+      setWordData((prevData) => ({
+        ...prevData,
+        [operationToWord(op)]: getInitialWord(getOperationBgColor(op)),
+      }));
+    } else {
+      setWordData((prevData) => ({
+        ...prevData,
+        [operationToWord(operation)]: getWordData(
+          word,
+          `${offset}, ${offset + word.length}`,
+          index,
+          getOperationBgColor(operation),
+        ),
+      }), [currentIndex]);
+    }
+  };
 
   const dataToServer = async () => {
     const [startA, endA] = wordData.A.offset
@@ -211,18 +162,19 @@ const useChunk = (completed, navigation, textStyle) => {
       mislead_noun_index: wordData.B.index,
       gender: parseInt(wordData.gender) - 1,
       corpus: completed
-        ? data[currentChunk.index].fields.corpus[2]
-        : data[currentChunk.index].pk,
+        ? data[currentIndex].fields.corpus[2]
+        : data[currentIndex].pk,
       user: user.id,
     };
 
-    setCurrentChunk(initialChunk);
+    setCurrentIndex(null);
+    setUpdated(null);
+    setProcessedWords(null);
 
     const postResponse = await axiosPost('add_entry_user/', data_);
     setReload((prevReload) => !prevReload);
     sendAlert(postResponse.data.text, '', () => setModalVisible(false));
   };
-
 
   return {
     data,
@@ -231,8 +183,8 @@ const useChunk = (completed, navigation, textStyle) => {
     loading,
     page,
     setPage,
-    currentChunk,
-    setCurrentChunk,
+    currentIndex,
+    setCurrentIndex,
     modalVisible,
     setModalVisible,
     allDone,
@@ -242,8 +194,10 @@ const useChunk = (completed, navigation, textStyle) => {
     operation,
     setOperation,
     dataToServer,
-    setReload,
-    setIsRemovalOp,
+    processedWords,
+    handlePressWord,
+    updated,
+    setUpdated,
   };
 };
 

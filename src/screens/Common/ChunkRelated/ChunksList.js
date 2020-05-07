@@ -30,7 +30,7 @@ const ChunksList = ({
   const Row = ({ fields, index, pk }) => (
     <TouchableOpacity
       onPress={() => {
-				  setIndex((prevData) => ({ ...prevData, index }));
+				  setIndex(index);
 				  modelToggle(true);
       }}
       style={styles.row}

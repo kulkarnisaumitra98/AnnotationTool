@@ -23,8 +23,8 @@ const ChunkScreen = ({ navigation }) => {
     data,
     loading,
     setPage,
-    currentChunk,
-    setCurrentChunk,
+    currentIndex,
+    setCurrentIndex,
     modalVisible,
     setModalVisible,
     allDone,
@@ -32,8 +32,12 @@ const ChunkScreen = ({ navigation }) => {
     setWordData,
     operation,
     dataToServer,
-    setIsRemovalOp,
-  } = useChunk(false, navigation, Platform.OS === 'web' ? { fontSize: 24, marginRight: 6 } : { fontSize: 18 });
+    processedWords,
+    handlePressWord,
+  } = useChunk(
+    false,
+    navigation,
+  );
 
   // useRenderCount();
 
@@ -46,7 +50,8 @@ const ChunkScreen = ({ navigation }) => {
   <>
     <ChunksList
       data={data}
-      setIndex={setCurrentChunk}
+      processedWords={processedWords}
+      setIndex={setCurrentIndex}
       modelToggle={setModalVisible}
       corporaToggle={false}
       LoadMoreChunks={(
@@ -57,19 +62,21 @@ const ChunkScreen = ({ navigation }) => {
         />
 )}
     />
-    {currentChunk.index !== null ? (
+    {currentIndex !== null ? (
       <ChunkAnnotationComponent
+        processedWords={processedWords}
         visible={modalVisible}
-        data={wordData}
-        chunk={currentChunk}
-        setData={setWordData}
+        data={data}
+        tableData={wordData}
+        index={currentIndex}
+        setTableData={setWordData}
         closeModal={() => setModalVisible(false)}
         addEntry={allDone}
         handleAddEntry={dataToServer}
-        setCurrentChunk={setCurrentChunk}
+        setCurrentIndex={setCurrentIndex}
         completed={false}
         operation={operation}
-        setIsRemovalOp={setIsRemovalOp}
+        handlePressWord={handlePressWord}
       />
     ) : null}
   </>

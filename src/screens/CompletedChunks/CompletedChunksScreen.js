@@ -12,6 +12,7 @@ import ChunkSelectionModalMobile from '../Common/ChunkRelated/ChunkSelectionModa
 import ChunksList from '../Common/ChunkRelated/ChunksList';
 import EndComponent from '../Common/ChunkRelated/EndComponent';
 import useChunk from '../Common/ChunkRelated/useChunk';
+import { sendAlert } from '../Common/Utils/alert';
 
 axios.defaults.withCredentials = true;
 
@@ -22,8 +23,8 @@ const CompletedChunksScreen = ({ navigation }) => {
     data,
     loading,
     setPage,
-    currentChunk,
-    setCurrentChunk,
+    currentIndex,
+    setCurrentIndex,
     modalVisible,
     setModalVisible,
     allDone,
@@ -31,12 +32,11 @@ const CompletedChunksScreen = ({ navigation }) => {
     setWordData,
     operation,
     dataToServer,
-    setIsRemovalOp,
-  } = useChunk(
-    true,
-    navigation,
-    Platform.OS === 'web' ? { fontSize: 24, marginRight: 6 } : { fontSize: 18 },
-  );
+    processedWords,
+    handlePressWord,
+    updated,
+    setUpdated,
+  } = useChunk(true, navigation);
 
   // useRenderCount();
 
@@ -46,36 +46,45 @@ const CompletedChunksScreen = ({ navigation }) => {
   return (
     <FlexedContainer contStyle={marginStyles.mt_12}>
       {!loading ? (
-        <>
-          <ChunksList
-            data={data}
-            setIndex={setCurrentChunk}
-            modelToggle={setModalVisible}
-            corporaToggle
-            LoadMoreChunks={(
-              <EndComponent
-                handlePress={() => setPage((prevPage) => prevPage + 1)}
-                end={end}
-                isData={data.length}
-              />
+			  !err ? (
+  <>
+    <ChunksList
+      data={data}
+      processedWords={processedWords}
+      setIndex={setCurrentIndex}
+      modelToggle={setModalVisible}
+      corporaToggle
+      LoadMoreChunks={(
+        <EndComponent
+          handlePress={() => setPage((prevPage) => prevPage + 1)}
+          end={end}
+          isData={data.length}
+        />
 )}
-          />
-          {currentChunk.index !== null ? (
-            <ChunkAnnotationComponent
-              visible={modalVisible}
-              data={wordData}
-              chunk={currentChunk}
-              setData={setWordData}
-              closeModal={() => setModalVisible(false)}
-              addEntry={allDone}
-              handleAddEntry={dataToServer}
-              setCurrentChunk={setCurrentChunk}
-              operation={operation}
-              completed
-              setIsRemovalOp={setIsRemovalOp}
-            />
-          ) : null}
-        </>
+    />
+    {currentIndex !== null ? (
+      <ChunkAnnotationComponent
+        processedWords={processedWords}
+        visible={modalVisible}
+        data={wordData}
+        tableData={wordData}
+        index={currentIndex}
+        setTableData={setWordData}
+        closeModal={() => setModalVisible(false)}
+        addEntry={allDone}
+        handleAddEntry={dataToServer}
+        setCurrentIndex={setCurrentIndex}
+        operation={operation}
+        handlePressWord={handlePressWord}
+        completed
+        updated
+        setUpdated={setUpdated}
+      />
+    ) : null}
+  </>
+			  ) : (
+  <>{sendAlert(err)}</>
+			  )
       ) : (
         <ActivityIndicator size="small" style={marginStyles.mt_24} />
       )}

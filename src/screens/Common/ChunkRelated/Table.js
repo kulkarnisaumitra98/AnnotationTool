@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-native/no-color-literals */
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Button from '../../../reusables/components/Button/Button';
@@ -5,7 +7,7 @@ import RowContainer from '../../../reusables/components/Containers/RowContainer'
 import { TEXT_BLACK } from '../../../reusables/styles/colors';
 import { paddingStyles } from '../../../reusables/styles/style';
 
-const Table = ({ data, setData, setIsRemovalOp }) => {
+const Table = ({ data, handleRemoveWord }) => {
   const { A, B } = data;
 
   const isA = A.value !== 'None';
@@ -31,11 +33,7 @@ const Table = ({ data, setData, setIsRemovalOp }) => {
             disabled={!isA}
             containerStyle={styles.button}
             title="Remove"
-						// handlePress={() => setData((prevData) => ({
-						//     ...prevData,
-						//     A: getInitialWord(BagSuccess),
-						//   }))}
-            handlePress={() => setIsRemovalOp({ value: true, op: 0 })}
+            handlePress={() => handleRemoveWord(A.value, A.offset, A.index, true, 0)}
           />
         </RowContainer>
         <Text style={styles.textStyle}>
@@ -69,11 +67,7 @@ const Table = ({ data, setData, setIsRemovalOp }) => {
             disabled={!isB}
             containerStyle={styles.button}
             title="Remove"
-						// handlePress={() => setData((prevData) => ({
-						//     ...prevData,
-						//     B: getInitialWord(BagError),
-						//   }))}
-            handlePress={() => setIsRemovalOp({ value: true, op: 1 })}
+            handlePress={() => handleRemoveWord(B.value, B.offset, B.index, true, 1)}
           />
         </RowContainer>
         <Text style={styles.textStyle}>
