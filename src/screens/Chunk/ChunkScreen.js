@@ -29,7 +29,7 @@ const ChunkScreen = ({ navigation }) => {
     setModalVisible,
     allDone,
     wordData,
-    setWordData,
+    setGender,
     operation,
     dataToServer,
     processedWords,
@@ -69,7 +69,7 @@ const ChunkScreen = ({ navigation }) => {
         data={data}
         tableData={wordData}
         index={currentIndex}
-        setTableData={setWordData}
+        setTableData={setGender}
         closeModal={() => setModalVisible(false)}
         addEntry={allDone}
         handleAddEntry={dataToServer}

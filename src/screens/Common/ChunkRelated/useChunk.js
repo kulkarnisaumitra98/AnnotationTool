@@ -1,6 +1,6 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useReducer, useState } from 'react';
 import UserContext from '../../../contexts/UserContext';
 import { BagError, BagSuccess } from '../../../reusables/styles/colors';
 import useDidUpdate from '../useDidUpdate';
@@ -11,10 +11,48 @@ import { processCorpusWords } from './Utils/corpusProcessing';
 import { getNextOperation, getOperationBgColor, operationToWord } from './Utils/general';
 import { getInitialWord, getWordData } from './Utils/getInitialWord';
 
+const ANNOCTION = 'ANNOCTION';
+const GENERAL_SPREAD = 'GENERAL_SPREAD';
+const SET_GENDER = 'SET_GENDER';
+
+const reducer = (state, { type, payload }) => {
+  switch (type) {
+    case ANNOCTION: {
+      const updatedWordData = { ...state.wordData };
+      updatedWordData[operationToWord(payload.opData.op)] = payload.opData.data;
+      return {
+        ...state,
+        processedWords: payload.processedWords,
+        wordData: updatedWordData,
+      };
+    }
+
+    case SET_GENDER: {
+      return {
+        ...state,
+        wordData: {
+          ...state.wordData,
+          gender: payload.value,
+        },
+      };
+    }
+
+    case GENERAL_SPREAD:
+      return {
+        ...state,
+        ...payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
 const useChunk = (completed, navigation) => {
-  const [page, setPage] = useState(1);
   const { user } = useContext(UserContext);
+
   const [reload, setReload] = useState(true);
+  const [page, setPage] = useState(1);
 
   const { _data, loading, err } = useFetch(
     !completed ? 'get_corpora/' : 'get_user_corpora/',
@@ -30,15 +68,21 @@ const useChunk = (completed, navigation) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [allDone, setAllDone] = useState(false);
   const [updated, setUpdated] = useState(false);
-  const [processedWords, setProcessedWords] = useState(null);
 
-  const initialState = {
+  const initialWordState = {
     A: getInitialWord(BagSuccess),
     B: getInitialWord(BagError),
     gender: 0,
+
   };
 
-  const [wordData, setWordData] = useState(initialState);
+  const initialAnnoState = {
+    wordData: initialWordState,
+    processedWords: null,
+  };
+
+  const [{ wordData, processedWords }, dispatch] = useReducer(reducer, initialAnnoState);
+
   const [operation, setOperation] = useState(0);
 
   useEffect(() => {
@@ -66,6 +110,8 @@ const useChunk = (completed, navigation) => {
   }, [operation]);
 
   useDidUpdate(() => {
+    const payload = {};
+
     if (currentIndex !== null) {
       if (completed) {
         const {
@@ -77,7 +123,8 @@ const useChunk = (completed, navigation) => {
           mislead_noun_index,
           gender,
         } = data[currentIndex].fields;
-        setWordData({
+
+        payload.wordData = {
           A: getWordData(
             correct_noun,
             `${correct_noun_off_start}, ${
@@ -95,27 +142,28 @@ const useChunk = (completed, navigation) => {
             BagError,
           ),
           gender: gender + 1,
-        });
-        setProcessedWords(
-          processCorpusWords(
-            data[currentIndex].fields,
-            [{ op: 0, index: correct_noun_index }, { op: 1, index: mislead_noun_index }],
-            completed,
-          ),
+        };
+
+        payload.processedWords = processCorpusWords(
+          data[currentIndex].fields,
+          [{ op: 0, index: correct_noun_index }, { op: 1, index: mislead_noun_index }],
+          completed,
         );
+        setUpdated(false);
       } else {
-        setWordData(initialState);
-        setProcessedWords(processCorpusWords(data[currentIndex].fields));
+        payload.wordData = initialWordState;
+        payload.processedWords = processCorpusWords(data[currentIndex].fields);
       }
-    } else {
-      setCurrentIndex(null);
-      setUpdated(null);
-      setProcessedWords(null);
+
+      dispatch({ type: GENERAL_SPREAD, payload });
     }
   }, [currentIndex]);
 
   const handlePressWord = (word, offset, index, remove, op) => {
     if (operation === 2 && !remove) return;
+    if (completed) {
+      setUpdated(true);
+    }
 
     const updatedProcessCorpusWords = [...processedWords];
     updatedProcessCorpusWords[index] = {
@@ -124,24 +172,27 @@ const useChunk = (completed, navigation) => {
       index,
       color: remove ? null : getOperationBgColor(operation),
     };
-    setProcessedWords(updatedProcessCorpusWords);
-    if (remove) {
-      setWordData((prevData) => ({
-        ...prevData,
-        [operationToWord(op)]: getInitialWord(getOperationBgColor(op)),
-      }));
-    } else {
-      setWordData((prevData) => ({
-        ...prevData,
-        [operationToWord(operation)]: getWordData(
-          word,
-          `${offset}, ${offset + word.length}`,
-          index,
-          getOperationBgColor(operation),
-        ),
-      }));
-    }
+
+    const payload = {
+      processedWords: updatedProcessCorpusWords,
+    };
+
+    payload.opData = remove ? {
+      op,
+      data: getInitialWord(getOperationBgColor(op)),
+    } : {
+      op: operation,
+      data: getWordData(
+        word,
+        `${offset}, ${offset + word.length}`,
+        index,
+        getOperationBgColor(operation),
+      ),
+    };
+
+    dispatch({ type: ANNOCTION, payload });
   };
+
 
   const dataToServer = async () => {
     const [startA, endA] = wordData.A.offset
@@ -168,12 +219,22 @@ const useChunk = (completed, navigation) => {
     };
 
     setCurrentIndex(null);
-    setUpdated(null);
-    setProcessedWords(null);
+    setUpdated(false);
+
+    dispatch({ type: GENERAL_SPREAD, payload: initialAnnoState });
 
     const postResponse = await axiosPost('add_entry_user/', data_);
     setReload((prevReload) => !prevReload);
     sendAlert(postResponse.data.text, '', () => setModalVisible(false));
+  };
+
+  const setGender = (value) => {
+    if (completed) { setUpdated(true); }
+
+    dispatch({
+      type: SET_GENDER,
+      payload: { value },
+    });
   };
 
   return {
@@ -190,14 +251,13 @@ const useChunk = (completed, navigation) => {
     allDone,
     setAllDone,
     wordData,
-    setWordData,
+    setGender,
     operation,
     setOperation,
     dataToServer,
     processedWords,
     handlePressWord,
     updated,
-    setUpdated,
   };
 };
 

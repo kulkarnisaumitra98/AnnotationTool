@@ -6,7 +6,6 @@ import RowContainer from '../../../reusables/components/Containers/RowContainer'
 import Cross from '../../../reusables/components/General/Cross';
 import { paddingStyles } from '../../../reusables/styles/style';
 import Title from '../Title';
-import useDidUpdate from '../useDidUpdate';
 import PickerContainer from './PickerContainer';
 import SplitWords from './SplitWords';
 import Table from './Table';
@@ -24,14 +23,7 @@ const ChunkSelectionModal = ({
   processedWords,
   handlePressWord,
   updated,
-  setUpdated,
 }) => {
-  useDidUpdate(() => {
-    if (completed && processedWords) {
-      setUpdated(true);
-    }
-  }, [tableData]);
-
   const disabled = ((!addEntry || !updated) && completed) || (!addEntry && !completed);
   return (
     <>

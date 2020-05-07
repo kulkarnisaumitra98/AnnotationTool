@@ -29,13 +29,12 @@ const CompletedChunksScreen = ({ navigation }) => {
     setModalVisible,
     allDone,
     wordData,
-    setWordData,
+    setGender,
     operation,
+    updated,
     dataToServer,
     processedWords,
     handlePressWord,
-    updated,
-    setUpdated,
   } = useChunk(true, navigation);
 
   // useRenderCount();
@@ -69,7 +68,7 @@ const CompletedChunksScreen = ({ navigation }) => {
         data={wordData}
         tableData={wordData}
         index={currentIndex}
-        setTableData={setWordData}
+        setTableData={setGender}
         closeModal={() => setModalVisible(false)}
         addEntry={allDone}
         handleAddEntry={dataToServer}
@@ -77,8 +76,7 @@ const CompletedChunksScreen = ({ navigation }) => {
         operation={operation}
         handlePressWord={handlePressWord}
         completed
-        updated
-        setUpdated={setUpdated}
+        updated={updated}
       />
     ) : null}
   </>
