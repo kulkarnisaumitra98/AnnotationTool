@@ -4,13 +4,13 @@
 /* eslint-disable camelcase */
 import axios from 'axios';
 import React from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Platform } from 'react-native';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
-import AlertText from '../../reusables/components/Texts/AlertText';
-import UnderlinedLinkText from '../../reusables/components/Texts/UnderlinedLinkText';
-import { dimensionStyles, marginStyles } from '../../reusables/styles/style';
+import { marginStyles } from '../../reusables/styles/style';
 import ChunkSelectionModal from '../Common/ChunkRelated/ChunkSelectionModal';
+import ChunkSelectionModalMobile from '../Common/ChunkRelated/ChunkSelectionModalMobile';
 import ChunksList from '../Common/ChunkRelated/ChunksList';
+import EndComponent from '../Common/ChunkRelated/EndComponent';
 import useChunk from '../Common/ChunkRelated/useChunk';
 
 axios.defaults.withCredentials = true;
@@ -32,11 +32,16 @@ const CompletedChunksScreen = ({ navigation }) => {
     operation,
     dataToServer,
     setIsRemovalOp,
-  } = useChunk(true, navigation);
+  } = useChunk(
+    true,
+    navigation,
+    Platform.OS === 'web' ? { fontSize: 24, marginRight: 6 } : { fontSize: 18 },
+  );
 
   // useRenderCount();
 
-  // console.log(data, 'fdshjkfhsdhfjksdjhfksd');s
+  const ChunkAnnotationComponent = Platform.OS === 'web' ? ChunkSelectionModal : ChunkSelectionModalMobile;
+
 
   return (
     <FlexedContainer contStyle={marginStyles.mt_12}>
@@ -47,29 +52,16 @@ const CompletedChunksScreen = ({ navigation }) => {
             setIndex={setCurrentChunk}
             modelToggle={setModalVisible}
             corporaToggle
-            LoadMoreChunks={
-							!end ? (
-							  data.length ? (
-  <UnderlinedLinkText
-    text="Load More Chunks"
-    handlePress={() => setPage((prevPage) => prevPage + 1)}
-  />
-							  ) : (
-  <AlertText
-    textStyle={{ textAlign: 'center' }}
-    containerStyle={[
-										  dimensionStyles.w_50,
-										  { alignSelf: 'center' },
-    ]}
-    text="No annotations, Get to work!!!"
-    type="error"
-  />
-							  )
-							) : null
-						}
+            LoadMoreChunks={(
+              <EndComponent
+                handlePress={() => setPage((prevPage) => prevPage + 1)}
+                end={end}
+                isData={data.length}
+              />
+)}
           />
           {currentChunk.index !== null ? (
-            <ChunkSelectionModal
+            <ChunkAnnotationComponent
               visible={modalVisible}
               data={wordData}
               chunk={currentChunk}

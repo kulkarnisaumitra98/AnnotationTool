@@ -115,12 +115,11 @@ const useChunk = (completed, navigation, textStyle) => {
         ),
       }));
     } else if (currentChunk.index !== null) {
-      setCurrentChunk((prevData) => ({
-        ...prevData,
-        index: prevData.index,
+      setCurrentChunk(() => ({
+        index: currentChunk.index,
         chunk: highlighSelected(
           wordData[operationToWord(operation)],
-          prevData.chunk,
+          currentChunk.chunk,
           textStyle,
         ),
       }));
@@ -178,7 +177,7 @@ const useChunk = (completed, navigation, textStyle) => {
           gender: gender + 1,
         });
       } else {
-        // setWordData(initialState);
+        setWordData(initialState);
 
         setCurrentChunk((prevData) => ({
           ...prevData,
