@@ -1,24 +1,31 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AsyncStorage } from 'react-native';
+import UserContext from '../../contexts/UserContext';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
 import KeyBoardView from '../../reusables/components/Containers/KeyboardView';
 import RowContainer from '../../reusables/components/Containers/RowContainer';
 import { dimensionStyles, positionStyles } from '../../reusables/styles/style';
+import { sendAlert } from '../Common/Utils/alert';
 import Login from './Login/Login';
 import Signup from './Signup/Signup';
 
 const AuthScreen = ({ navigation }) => {
-  // React.useEffect(() => {
-  //   const unsubscribe = navigation.addListener('tabPress', (e) => {
-  //     // Prevent default behavior
-  //     e.preventDefault();
+  const { setUser } = useContext(UserContext);
 
-  //     alert('Default behavior prevented');
-  //     // Do something manually
-  //     // ...
-  //   });
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('tabPress', (e) => {
+      // Prevent default behavior
+      e.preventDefault();
 
-  //   return unsubscribe;
-  // }, [navigation]);
+      AsyncStorage.removeItem('user').then(() => {
+        sendAlert('Logged Out');
+        navigation.navigate('Auth');
+        setUser(null);
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const content = (
     <>

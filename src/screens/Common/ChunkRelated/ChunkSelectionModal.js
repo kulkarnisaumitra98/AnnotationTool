@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
 
   button: {
     // backgroundColor: BUTTON_GREEN,
-    // height: 40,
+    height: 28,
     marginRight: 24,
     marginLeft: 16,
   },

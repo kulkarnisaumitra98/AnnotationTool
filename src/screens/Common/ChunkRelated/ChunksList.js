@@ -1,27 +1,24 @@
 import React from 'react';
 import { FlatList, Platform, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
-import { dimensionStyles, marginStyles } from '../../../reusables/styles/style';
+import { marginStyles } from '../../../reusables/styles/style';
+
+const isWeb = Platform.OS === 'web';
 
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    width: '98%',
+    width: '100%',
     borderWidth: 1,
     borderColor: '#ddd',
-    padding: 16,
+    padding: isWeb ? 16 : 8,
     marginBottom: 16,
-    borderRadius: 24,
-
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
+
+  textStyle: {
+    fontSize: isWeb ? 18 : 16,
+  },
+
 });
 
 const ChunksList = ({
@@ -30,16 +27,17 @@ const ChunksList = ({
   const Row = ({ fields, index, pk }) => (
     <TouchableOpacity
       onPress={() => {
-				  setIndex(index);
-				  modelToggle(true);
+			  setIndex(index);
+			  modelToggle(true);
       }}
-      style={styles.row}
+      style={[styles.row, index % 2 ? { backgroundColor: '#f4f4f4' } : null]}
     >
-      <RowContainer contStyle={dimensionStyles.w_100} justifyContent="flex-start">
-        <Text style={{ fontSize: 18, paddingTop: 0 }}>
-          {`${index + 1}.`}
-        </Text>
-        <Text numberOfLines={1} style={[marginStyles.ml_16, { width: '96%', borderWidth: 0, fontSize: 18 }]}>
+      <RowContainer contStyle={{ width: '95%' }} justifyContent="flex-start">
+        <Text style={styles.textStyle}>{`${index + 1}.`}</Text>
+        <Text
+          numberOfLines={1}
+          style={[marginStyles.ml_16, { width: '96%' }, styles.textStyle]}
+        >
           {corporaToggle ? fields.corpus[0] : fields.corpus}
         </Text>
       </RowContainer>

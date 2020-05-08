@@ -96,7 +96,6 @@ const useChunk = (completed, navigation) => {
   }, [navigation]);
 
   useDidUpdate(() => {
-    console.log(operation);
     if (currentIndex !== null) {
       setOperation(getNextOperation(wordData));
     }

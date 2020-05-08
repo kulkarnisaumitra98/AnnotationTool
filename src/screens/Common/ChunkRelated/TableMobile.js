@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-native/no-color-literals */
 import { Entypo } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -5,7 +7,7 @@ import RowContainer from '../../../reusables/components/Containers/RowContainer'
 import { TEXT_BLACK } from '../../../reusables/styles/colors';
 import { paddingStyles } from '../../../reusables/styles/style';
 
-const TableMobile = ({ data, setData, setIsRemovalOp }) => {
+const TableMobile = ({ data, handleRemoveWord }) => {
   const { A, B } = data;
 
   const isA = A.value !== 'None';
@@ -29,12 +31,12 @@ const TableMobile = ({ data, setData, setIsRemovalOp }) => {
           </Text>
           <TouchableOpacity
             disabled={!isA}
-            onPress={() => setIsRemovalOp({ value: true, op: 0 })}
+            onPress={() => handleRemoveWord(A.value, A.offset, A.index, true, 0)}
           >
             <Entypo
               name="circle-with-cross"
               size={24}
-              color={!isB ? 'grey' : 'red'}
+              color={!isA ? 'grey' : 'red'}
             />
           </TouchableOpacity>
         </RowContainer>
@@ -67,7 +69,7 @@ const TableMobile = ({ data, setData, setIsRemovalOp }) => {
           </Text>
           <TouchableOpacity
             disabled={!isB}
-            onPress={() => setIsRemovalOp({ value: true, op: 1 })}
+            onPress={() => handleRemoveWord(B.value, B.offset, B.index, true, 1)}
           >
             <Entypo
               name="circle-with-cross"
@@ -95,7 +97,7 @@ const TableMobile = ({ data, setData, setIsRemovalOp }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 8,
+    marginTop: 'auto',
   },
 
   wordCont: {

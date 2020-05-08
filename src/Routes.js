@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-return-assign */
+import { FontAwesome, MaterialCommunityIcons, Octicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,13 +10,13 @@ import { AsyncStorage, Platform } from 'react-native';
 import ScreenContext from './contexts/ScreenContext';
 import UserContext from './contexts/UserContext';
 import { isMountedRef, navigate, navigationRef } from './reusables/functions/NavigatorService';
+import { BLUE_BUTTON } from './reusables/styles/colors';
 import AuthScreen from './screens/Auth/AuthScreen';
 import ChunkScreen from './screens/Chunk/ChunkScreen';
 import NavBar from './screens/Common/Navbar/Navbar';
 import { sendAlert } from './screens/Common/Utils/alert';
 import CompletedChunksScreen from './screens/CompletedChunks/CompletedChunksScreen';
 import InitScreen from './screens/Init/InitScreen';
-import LeaderboardScreen from './screens/Leaderboard/LeaderboardScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,14 +24,43 @@ const Tab = createBottomTabNavigator();
 
 const TabRoutes = () => (
   <Tab.Navigator
+    tabBarOptions={{
+		  activeTintColor: BLUE_BUTTON,
+    }}
     screenOptions={() => ({
 		  tabBarVisible: Platform.OS !== 'web',
     })}
   >
-    <Tab.Screen name="Chunks" component={ChunkScreen} />
-    <Tab.Screen name="Completed" component={CompletedChunksScreen} />
-    <Tab.Screen name="Leaderboard" component={LeaderboardScreen} />
-    <Tab.Screen name="Logout" component={AuthScreen} />
+    <Tab.Screen
+      name="Chunks"
+      component={ChunkScreen}
+      options={{
+			  tabBarLabel: 'Chunks',
+			  tabBarIcon: ({ color, size }) => (
+  <FontAwesome name="tasks" color={color} size={size} />
+			  ),
+      }}
+    />
+    <Tab.Screen
+      name="Completed"
+      component={CompletedChunksScreen}
+      options={{
+			  tabBarLabel: 'Completed',
+			  tabBarIcon: ({ color, size }) => (
+  <Octicons name="tasklist" color={color} size={size} />
+			  ),
+      }}
+    />
+    <Tab.Screen
+      name="Logout"
+      component={AuthScreen}
+      options={{
+			  tabBarLabel: 'Logout',
+			  tabBarIcon: ({ color, size }) => (
+  <MaterialCommunityIcons name="logout" color={color} size={size} />
+			  ),
+      }}
+    />
   </Tab.Navigator>
 );
 
@@ -103,7 +133,7 @@ const Routes = () => {
 
   return (
     <>
-      {user && Platform.OS === 'web' ? <NavBar /> : null}
+      {user ? <NavBar /> : null}
       <NavigationContainer ref={navigationRef}>
         <StackRoutes />
       </NavigationContainer>

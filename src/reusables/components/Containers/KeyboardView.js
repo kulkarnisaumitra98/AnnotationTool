@@ -33,7 +33,9 @@ const KeyBoardView = ({ children, contStyle }) => {
 
   const _keyboardDidHide = () => {
     setTimeout(() => setStyleMode(null), 0);
-    currentIp.current.blur();
+    if (currentIp.current) {
+      currentIp.current.blur();
+    }
     currentIp.current = null;
   };
 

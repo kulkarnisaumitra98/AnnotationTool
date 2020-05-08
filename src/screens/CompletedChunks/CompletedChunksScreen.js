@@ -6,7 +6,7 @@ import axios from 'axios';
 import React from 'react';
 import { ActivityIndicator, Platform } from 'react-native';
 import FlexedContainer from '../../reusables/components/Containers/FlexedContainer';
-import { marginStyles } from '../../reusables/styles/style';
+import { marginStyles, paddingStyles } from '../../reusables/styles/style';
 import ChunkSelectionModal from '../Common/ChunkRelated/ChunkSelectionModal';
 import ChunkSelectionModalMobile from '../Common/ChunkRelated/ChunkSelectionModalMobile';
 import ChunksList from '../Common/ChunkRelated/ChunksList';
@@ -43,7 +43,7 @@ const CompletedChunksScreen = ({ navigation }) => {
 
 
   return (
-    <FlexedContainer contStyle={marginStyles.mt_12}>
+    <FlexedContainer contStyle={[marginStyles.mt_12, paddingStyles.p_0]}>
       {!loading ? (
 			  !err ? (
   <>

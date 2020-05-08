@@ -1,42 +1,33 @@
-import { AntDesign } from '@expo/vector-icons';
-import React, { useEffect } from 'react';
-import { ActivityIndicator, Modal, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import React from 'react';
+import { ActivityIndicator, Modal, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
 import { SUCCESS_TEXT } from '../../../reusables/styles/colors';
 import { paddingStyles } from '../../../reusables/styles/style';
 import Title from '../Title';
-import Table from './Table';
+import PickerContainer from './PickerContainer';
+import SplitWords from './SplitWords';
 import TableMobile from './TableMobile';
 import { getOperationColor, getOperationName } from './Utils/general';
 
 const ChunkSelectionModalMobile = ({
   visible,
   closeModal,
-  data,
-  chunk,
-  setData,
+  tableData,
+  setTableData,
   addEntry,
   handleAddEntry,
   operation,
-  setCurrentChunk,
   completed,
-  setIsRemovalOp,
+  processedWords,
+  handlePressWord,
+  updated,
 }) => {
-  useEffect(() => {
-    if (completed && chunk.chunk) {
-      // console.log(chunk.updated, 'fds');
-      setCurrentChunk((prevChunk) => ({ ...prevChunk, updated: true }));
-    }
-  }, [data]);
-
-  // console.log(chunk.chunk?.map((item) => item.props.children));
-
-  const disabled =		((!addEntry || !chunk.updated) && completed) || (!addEntry && !completed);
-  const TableComponent = Platform.OS === 'web' ? Table : TableMobile;
+  const disabled = ((!addEntry || !updated) && completed) || (!addEntry && !completed);
 
   return (
     <>
-      {chunk.chunk ? (
+      {processedWords ? (
         <Modal
           visible={visible}
           onRequestClose={closeModal}
@@ -45,9 +36,12 @@ const ChunkSelectionModalMobile = ({
         >
           <View style={styles.container}>
             <RowContainer
-              contStyle={{ padding: 2, alignItem: 'center', marginBottom: 12 }}
+              contStyle={styles.header}
               justifyContent="space-between"
             >
+              <TouchableOpacity onPress={closeModal}>
+                <MaterialIcons name="arrow-back" size={24} />
+              </TouchableOpacity>
               <Title
                 title={addEntry ? 'Done!' : getOperationName(operation)}
                 textStyle={[
@@ -55,23 +49,36 @@ const ChunkSelectionModalMobile = ({
 								  { color: getOperationColor(operation), fontSize: 18 },
                 ]}
               />
-              <TouchableOpacity
-                disabled={disabled}
-                handlePress={handleAddEntry}
-              >
-                <AntDesign
-                  name="pluscircle"
-                  size={24}
-                  color={disabled ? 'grey' : SUCCESS_TEXT}
-                />
+              <TouchableOpacity disabled={disabled} onPress={handleAddEntry}>
+                {!completed ? (
+                  <AntDesign
+                    name="pluscircle"
+                    size={24}
+                    color={disabled ? 'grey' : SUCCESS_TEXT}
+                  />
+                ) : (
+                  <MaterialIcons
+                    name="update"
+                    size={24}
+                    color={disabled ? 'grey' : SUCCESS_TEXT}
+                  />
+                )}
               </TouchableOpacity>
             </RowContainer>
-            <Text>{chunk.chunk}</Text>
-            <TableComponent
-              data={data}
-              setData={setData}
-              setIsRemovalOp={setIsRemovalOp}
+
+            <ScrollView>
+              <View style={styles.wrapWords}>
+                <SplitWords
+                  processedWords={processedWords}
+                  handlePressWord={handlePressWord}
+                />
+              </View>
+            </ScrollView>
+            <PickerContainer
+              gender={tableData.gender}
+              setGender={setTableData}
             />
+            <TableMobile data={tableData} handleRemoveWord={handlePressWord} />
           </View>
         </Modal>
       ) : (
@@ -81,12 +88,12 @@ const ChunkSelectionModalMobile = ({
   );
 };
 const styles = StyleSheet.create({
-
   container: {
     position: 'relative',
     backgroundColor: '#fff',
     width: '100%',
-    borderWidth: 0,
+    borderWidth: 1,
+    flex: 1,
     padding: 16,
   },
 
@@ -110,6 +117,20 @@ const styles = StyleSheet.create({
     // height: 40,
     marginRight: 24,
     marginLeft: 16,
+  },
+
+  wrapWords: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+
+  header: {
+    padding: 2,
+    alignItems: 'center',
+    marginBottom: 12,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+    paddingBottom: 16,
   },
 });
 

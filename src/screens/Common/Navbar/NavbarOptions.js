@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import ScreenContext from '../../../contexts/ScreenContext';
 import UserContext from '../../../contexts/UserContext';
 import RowContainer from '../../../reusables/components/Containers/RowContainer';
@@ -26,9 +26,11 @@ const NavbarOptions = ({
       <MyText style={[textStyles.header, styles.header]}>
         {user ? `Welcome, ${user.name}` : 'Loading...'}
       </MyText>
-      <RowContainer>
-        {renderComponents(NavButton)}
-      </RowContainer>
+      {Platform.OS === 'web' ? (
+        <RowContainer>
+          {renderComponents(NavButton)}
+        </RowContainer>
+      ) : null}
     </View>
   );
 };
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
   header: {
     marginRight: 'auto',
     color: WHITE,
-    paddingLeft: 16,
+    paddingLeft: Platform.OS === 'web' ? 16 : 8,
   },
 });
 

@@ -21,8 +21,6 @@ export const getNextOperation = (data) => {
     }
   }
 
-  console.log(index, 'index', data.gender);
-
   return data.gender ? index + 1 : index;
 };
 

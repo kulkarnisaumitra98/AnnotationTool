@@ -1,29 +1,34 @@
 import React from 'react';
-import { Text } from 'react-native';
-import useRenderCount from '../useRenderCount';
+import { Platform, StyleSheet, Text } from 'react-native';
 
-const SplitWords = ({ processedWords, handlePressWord }) => {
-  useRenderCount();
-  return (
-    <>
-      {processedWords.map((item, index) => (
-        <Text
-          key={index}
-          style={[
-				  { fontSize: 24, marginRight: 8 },
+const isWeb = Platform.OS === 'web';
+
+const SplitWords = ({ processedWords, handlePressWord }) => (
+  // useRenderCount();
+  <>
+    {processedWords.map((item, index) => (
+      <Text
+        key={index}
+        style={[
 				  { backgroundColor: item.color },
-          ]}
-          onPress={
+				  styles.text,
+        ]}
+        onPress={
 					item.color
 					  ? () => {}
 					  : () => handlePressWord(item.word, item.offset, index)
 				}
-        >
-          {item.word}
-        </Text>
-      ))}
-    </>
-  );
-};
+      >
+        {item.word}
+      </Text>
+    ))}
+  </>
+);
+const styles = StyleSheet.create({
+  text: {
+    fontSize: isWeb ? 24 : 20,
+    marginRight: 8,
+  },
+});
 
 export default SplitWords;

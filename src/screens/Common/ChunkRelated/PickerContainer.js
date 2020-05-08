@@ -1,8 +1,10 @@
 import React from 'react';
-import { Picker, StyleSheet, View } from 'react-native';
+import { Picker, Platform, StyleSheet, View } from 'react-native';
+
+const isWeb = Platform.OS === 'web';
 
 const PickerContainer = ({ setGender, gender }) => (
-  <View style={styles.container}>
+  <View style={[styles.container, !isWeb ? { justifyContent: 'center' } : null]}>
     <Picker
       selectedValue={gender}
       onValueChange={(value) => setGender(value)}
@@ -18,7 +20,11 @@ const PickerContainer = ({ setGender, gender }) => (
 
 const styles = StyleSheet.create({
   container: {
-
+    borderWidth: isWeb ? 0 : 1,
+    borderColor: '#ddd',
+    height: 38,
+    borderRadius: 4,
+    marginTop: isWeb ? 0 : 16,
   },
 });
 
