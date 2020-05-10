@@ -1,0 +1,35 @@
+{
+  "files": {
+    "app.js": "/AnnotationTool/static/js/app.a3ac8090.chunk.js",
+    "app.js.map": "/AnnotationTool/static/js/app.a3ac8090.chunk.js.map",
+    "runtime~app.js": "/AnnotationTool/static/js/runtime~app.d3f993ba.js",
+    "runtime~app.js.map": "/AnnotationTool/static/js/runtime~app.d3f993ba.js.map",
+    "static/js/2.78b5479b.chunk.js": "/AnnotationTool/static/js/2.78b5479b.chunk.js",
+    "static/js/2.78b5479b.chunk.js.map": "/AnnotationTool/static/js/2.78b5479b.chunk.js.map",
+    "fonts/AntDesign.ttf": "/AnnotationTool/./fonts/AntDesign.ttf",
+    "fonts/Entypo.ttf": "/AnnotationTool/./fonts/Entypo.ttf",
+    "fonts/Feather.ttf": "/AnnotationTool/./fonts/Feather.ttf",
+    "fonts/FontAwesome.ttf": "/AnnotationTool/./fonts/FontAwesome.ttf",
+    "fonts/FontAwesome5_Brands.ttf": "/AnnotationTool/./fonts/FontAwesome5_Brands.ttf",
+    "fonts/FontAwesome5_Solid.ttf": "/AnnotationTool/./fonts/FontAwesome5_Solid.ttf",
+    "fonts/Foundation.ttf": "/AnnotationTool/./fonts/Foundation.ttf",
+    "fonts/Ionicons.ttf": "/AnnotationTool/./fonts/Ionicons.ttf",
+    "fonts/MaterialCommunityIcons.ttf": "/AnnotationTool/./fonts/MaterialCommunityIcons.ttf",
+    "fonts/MaterialIcons.ttf": "/AnnotationTool/./fonts/MaterialIcons.ttf",
+    "fonts/SimpleLineIcons.ttf": "/AnnotationTool/./fonts/SimpleLineIcons.ttf",
+    "favicon-16.png": "/AnnotationTool/favicon-16.png",
+    "favicon-32.png": "/AnnotationTool/favicon-32.png",
+    "favicon.ico": "/AnnotationTool/favicon.ico",
+    "index.html": "/AnnotationTool/index.html",
+    "manifest.json": "/AnnotationTool/manifest.json",
+    "serve.json": "/AnnotationTool/serve.json",
+    "service-worker.js.map": "/AnnotationTool/service-worker.js.map",
+    "workbox-208bbc3c.js": "/AnnotationTool/workbox-208bbc3c.js",
+    "workbox-208bbc3c.js.map": "/AnnotationTool/workbox-208bbc3c.js.map"
+  },
+  "entrypoints": [
+    "static/js/runtime~app.d3f993ba.js",
+    "static/js/2.78b5479b.chunk.js",
+    "static/js/app.a3ac8090.chunk.js"
+  ]
+}
