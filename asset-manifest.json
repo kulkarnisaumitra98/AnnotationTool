@@ -1,7 +1,7 @@
 {
   "files": {
-    "app.js": "/AnnotationTool/static/js/app.a3ac8090.chunk.js",
-    "app.js.map": "/AnnotationTool/static/js/app.a3ac8090.chunk.js.map",
+    "app.js": "/AnnotationTool/static/js/app.3a4ff6f5.chunk.js",
+    "app.js.map": "/AnnotationTool/static/js/app.3a4ff6f5.chunk.js.map",
     "runtime~app.js": "/AnnotationTool/static/js/runtime~app.d3f993ba.js",
     "runtime~app.js.map": "/AnnotationTool/static/js/runtime~app.d3f993ba.js.map",
     "static/js/2.78b5479b.chunk.js": "/AnnotationTool/static/js/2.78b5479b.chunk.js",
@@ -30,6 +30,6 @@
   "entrypoints": [
     "static/js/runtime~app.d3f993ba.js",
     "static/js/2.78b5479b.chunk.js",
-    "static/js/app.a3ac8090.chunk.js"
+    "static/js/app.3a4ff6f5.chunk.js"
   ]
 }
